@@ -1,0 +1,234 @@
+#include "Lua_Export.h"
+#include "MapIndex.h"
+#include "XmlBuilder.h"
+#include "BasicCharacter.h"
+#include "Item.h"
+#include <iostream>
+using std::cout;
+using std::endl;
+// Just list all characters no arguements
+int ListCharacters(lua_State *l)
+{
+if(MapIndex::Instance()->getCharacters().size()==0)
+  {
+cout<<"No Characters Registered Yet"<<endl;
+}
+unordered_map<unsigned int,BaseCharacter*>::iterator it;
+for(it=MapIndex::Instance()->getCharacters().begin();it!=MapIndex::Instance()->getCharacters().end();++it)
+  {
+cout<<(*it).first<<" "<<(*it).second->getInfo()->getName()<<endl;
+}
+}
+// Just list all items no arguements
+int ListItems(lua_State *l)
+{
+unordered_map<unsigned int,Item*>::iterator it;
+if(MapIndex::Instance()->getItems().size()==0)
+  {
+cout<<"No Items Registered Yet"<<endl;
+}
+for(it=MapIndex::Instance()->getItems().begin();it!=MapIndex::Instance()->getItems().end();++it)
+  {
+cout<<(*it).first<<" "<<(*it).second->getInfo()->getName()<<endl;
+}
+}
+//Insert a new character into the engine from an xml file
+int LoadCharacter(lua_State *l)
+{
+//get the string from the top of lua
+string xmlfile = luaL_checkstring(l, 1);
+MapIndex::Instance()->AddCharacter(XmlBuilder::LoadCharacter(xmlfile));
+
+}
+//Insert a new character into the engine from an xml file
+int LoadItem(lua_State *l)
+{
+string xmlfile = luaL_checkstring(l, 1);
+Item *item=XmlBuilder::LoadItem(xmlfile);
+
+MapIndex::Instance()->AddItem(item);
+}
+//Load a new map from an xml file
+int LoadMap(lua_State *l)
+{
+
+}
+//Switch Map
+int SwitchMap(lua_State *l)
+{
+
+}
+
+void lua_register_globals(lua_State *l)
+{
+lua_pushcfunction(l, ListCharacters);
+lua_setglobal(l, "listcharacters");
+lua_pushcfunction(l, ListItems);
+lua_setglobal(l, "listitems");
+lua_pushcfunction(l, LoadCharacter);
+lua_setglobal(l, "LoadCharacter");
+lua_pushcfunction(l, LoadItem);
+lua_setglobal(l, "LoadItem");
+}
+
+
+
+//CHARACTER
+int character_get(lua_State *l)
+{
+//Load an int from lua
+int id= luaL_checknumber(l, 1);
+BaseCharacter *chara=MapIndex::Instance()->getCharacter(id);
+//Push a Character** to lua
+ 
+//  cout<<"Probably got a character"<<chara->getInfo()->getName()<<endl;
+ BaseCharacter ** pchar = (BaseCharacter **)lua_newuserdata(l, sizeof(BaseCharacter *));
+     *pchar=chara;
+     luaL_setmetatable(l, LUA_CHARACTER);
+	return 1;
+}
+int character_unlink(lua_State *l)
+{
+
+}
+//in tiles
+int character_place(lua_State *l)
+{
+  BaseCharacter *chara=*(BaseCharacter**)luaL_checkudata(l, 1, LUA_CHARACTER);
+
+  int xpos=luaL_checknumber(l,2);
+  int ypos=luaL_checknumber(l,3);
+  // cout<<"Placing  character:"<<chara->getInfo()->getName()<<"at:"<<xpos<<','<<ypos<<endl;
+  int tile_size=MapIndex::Instance()->getMap()->getTileSize();
+  chara->SetPosition(xpos*tile_size,ypos*tile_size);
+  MapIndex::Instance()->CharIndexUpdate(chara,0,0);
+  return 0;
+
+}
+// absolute position
+int character_move(lua_State *l)
+{
+
+   BaseCharacter *chara=*(BaseCharacter**)luaL_checkudata(l, 1, LUA_CHARACTER);
+  int xpos=luaL_checknumber(l,2);
+  int ypos=luaL_checknumber(l,3);
+  chara->SetPosition(xpos,ypos);
+  return 0;
+
+}
+
+int character_equip(lua_State *l)
+{
+  cout<<"Equip Called"<<endl;
+   BaseCharacter *chara=*(BaseCharacter**)luaL_checkudata(l, 1, LUA_CHARACTER);
+   cout<<"Probably got a character"<<chara->getInfo()->getName()<<endl;
+   Item *it=*(Item**)luaL_checkudata(l, 2, LUA_ITEM);
+    cout<<"Loading item"<<it->getInfo()->getName()<<endl;
+   chara->Equip(it);
+   MapIndex::Instance()->RemoveItem(it->getID());
+   //Reset Placement 
+   chara->SetPosition(chara->getPosition().x,chara->getPosition().y);
+   return 0;
+}
+int character_addinventory(lua_State *l)
+{
+   BaseCharacter *chara=*(BaseCharacter**)luaL_checkudata(l, 1, LUA_CHARACTER);
+   Item *it=*(Item**)luaL_checkudata(l, 2, LUA_ITEM);
+   cout<<"Adding "<<it->getInfo()->getName()<<" to "<<chara->getInfo()->getName()<<"'s inventory"<<endl;
+   chara->AddItemToInventory(it);
+   cout<<"Trying to remove item with ID:"<<it->getID()<<endl;
+   MapIndex::Instance()->RemoveItem(it->getID());
+   return 0;
+  
+}
+void lua_register_character(lua_State *l)
+{
+  lua_register(l,LUA_CHARACTER , character_get);
+  luaL_newmetatable(l, LUA_CHARACTER);
+  lua_pushcfunction(l, character_unlink); lua_setfield(l, -2, "__gc");
+  lua_pushvalue(l, -1); lua_setfield(l, -2, "__index");
+  lua_pushcfunction(l, character_place); lua_setfield(l, -2, "Place");
+  lua_pushcfunction(l, character_move); lua_setfield(l, -2, "Move");
+  lua_pushcfunction(l, character_equip); lua_setfield(l, -2, "Equip");
+    lua_pushcfunction(l, character_addinventory); lua_setfield(l, -2, "Store");
+  lua_pop(l, 1);
+  
+}
+
+
+//ITEM
+int item_get(lua_State *l)
+{
+//Load an int from lua
+int id= luaL_checknumber(l, 1);
+Item *item=MapIndex::Instance()->getItem(id);
+ if(item!=NULL)
+   {
+ Item **pitem = (Item **)lua_newuserdata(l, sizeof(Item *));
+ cout<<"Loading item"<<item->getInfo()->getName()<<endl;;
+     *pitem=item;
+     luaL_setmetatable(l, LUA_ITEM);
+	return 1;
+   }
+ else
+   {
+     return 0;
+   }
+}
+
+int item_unlink(lua_State *l)
+{
+
+}
+
+int item_tests(lua_State *l)
+{
+
+   Item *item=*(Item**)luaL_checkudata(l, 1, LUA_ITEM);
+   cout<<"Testing"<<item->getInfo()->getName()<<endl;
+   if(dynamic_cast<Weapon*>(item)!=NULL)
+     {
+       cout<<"We Got a weapon"<<endl;
+     }
+
+   return 0;
+}
+
+int item_place(lua_State *l)
+{
+  Item *item=*(Item**)luaL_checkudata(l, 1, LUA_ITEM);
+
+  int xpos=luaL_checknumber(l,2);
+  int ypos=luaL_checknumber(l,3);
+  // cout<<"Placing  character:"<<chara->getInfo()->getName()<<"at:"<<xpos<<','<<ypos<<endl;
+  int tile_size=MapIndex::Instance()->getMap()->getTileSize();
+  item->SetPosition(xpos*tile_size,ypos*tile_size);
+   MapIndex::Instance()->ItemIndexUpdate(item,0,0);//Implement ItemIndex
+  return 0;
+
+}
+
+void lua_register_item(lua_State *l)
+{
+
+  lua_register(l,LUA_ITEM , item_get);
+  luaL_newmetatable(l, LUA_ITEM);
+  lua_pushcfunction(l, item_unlink); lua_setfield(l, -2, "__gc");
+  lua_pushvalue(l, -1); lua_setfield(l, -2, "__index");
+  lua_pushcfunction(l, item_place); lua_setfield(l, -2, "Place");
+    lua_pushcfunction(l, item_tests); lua_setfield(l, -2, "Test");
+  lua_pop(l, 1);
+
+}
+
+
+
+
+
+void lua_register_everything(lua_State *l)
+{
+  lua_register_globals(l);
+  lua_register_character(l);
+  lua_register_item(l);
+
+}

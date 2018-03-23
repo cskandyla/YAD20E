@@ -1,0 +1,25 @@
+
+#include "Item.h"
+#include "../Entity/AnimatedEntity.h"
+#include <SDL.h>
+#ifndef __VISIBLEITEM__
+#define __VISIBLEITEM__
+
+
+class VisibleItem:public Item
+{
+private:
+    AnimatedEntity *itementity;
+public:
+    VisibleItem(ItemInfo *info,Stats *BaseStats,string itemimg,AnimatedEntity *itementity);
+    void Draw(SDL_Surface *screen);
+    void Update(float t);
+    void setAnimation(ANIMS anim);
+    void SetDestination(int x,int y);
+    void setPosition(int x,int y);
+    SDL_Rect getPosition();
+    void SetVelocity(int x,int y);
+
+};
+
+#endif // __VISIBLEITEM__

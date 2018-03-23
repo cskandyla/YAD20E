@@ -1,0 +1,34 @@
+#include "../Info-Stats/Info.h"
+#include "../Info-Stats/Stats.h"
+#include "../Info-Stats/Effect.h"
+#include <SDL.h>
+#include <list>
+#include <string>
+#include <iostream>
+using std::list;
+using std::string;
+using std::cout;
+using std::endl;
+#ifndef __ITEM__
+#define __ITEM__
+
+class Item
+{
+protected:
+    ItemInfo *info;
+    Stats *Basestats;
+    Stats *currentstats;
+    list<Effect*> item_effects;
+    SDL_Surface *itemimage;
+    SDL_Rect position;
+public:
+    Item(ItemInfo *info,Stats *BaseStats,string itemimg);
+    SDL_Surface* getItemImage();
+    void SetPosition(int x,int y);
+    void Show(SDL_Surface *screen);
+    ItemInfo* getInfo();
+    virtual ~Item() {}
+};
+
+
+#endif // __ITEM__

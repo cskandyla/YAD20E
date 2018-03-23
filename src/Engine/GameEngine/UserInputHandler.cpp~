@@ -1,0 +1,196 @@
+#include "UserInputHandler.h"
+#include "CellInfo.h"
+#include "params.h"
+#include "MapIndex.h"
+#include "Turn.h"
+#include "Astar.h"
+#include "Camera.h"
+#include <iostream>
+using std::cout;
+using std::endl;
+
+
+UserInputHandler::UserInputHandler(Camera *camera,Turn *the_turn)
+{
+  this->camera=camera;
+  this->the_turn=the_turn;
+  this->i_state=NULL;
+  
+}
+
+UserInputHandler::~UserInputHandler()
+{
+  if(i_state)
+    delete i_state;
+}
+
+
+void UserInputHandler::HandleEvents(SDL_Event *event)
+{
+  {
+
+    switch (event->type)
+      {
+      case SDL_KEYDOWN:
+	{
+	  if (event->key.keysym.sym == SDLK_ESCAPE)
+	    {
+	      cout<<"Exiting"<<endl;
+	      exit(0);
+	    }
+	}
+	break;
+      case SDL_MOUSEBUTTONDOWN :
+	{
+	  if(event->button.button == SDL_BUTTON_LEFT)
+	    {   
+	      LeftClick(event);	  
+	    }
+	  else if(event->button.button == SDL_BUTTON_RIGHT)
+	    {
+	      RightClick(event);
+	    }
+
+	}
+	break; 
+      }
+  }
+}
+
+
+void UserInputHandler::SetState(InputState *i_state)
+{
+  if(!the_turn->AIControlled())
+    {
+      if(this->i_state)
+	delete this->i_state;
+      this->i_state=i_state;
+    }
+}
+
+InputState* UserInputHandler::GetState()
+{
+  return this->i_state;
+}
+
+void UserInputHandler::LeftClick(SDL_Event *event)
+{
+
+  int xpos=event->button.x;
+  int ypos=event->button.y;
+  if(i_state==NULL)
+    {
+      
+      CellInfo *cell=camera->ClickedCell(xpos,ypos);
+      if(!cell)
+	{
+	  //Clicked On Empty Space
+	  ClickedOnEmptySpace(camera->ClickedRect(xpos,ypos));
+	}
+      else if(cell)
+	{
+	  switch (cell->getType())
+	    {
+	    case CHARACTER_T:
+	      ClickedOnCharacter(cell);
+	      break;
+	    case OBJECT_T:
+	      ClickedOnObject(cell);
+	      break;
+	    }
+	}
+  
+    }
+  else
+    {
+	  i_state->Execute(camera->Translate(xpos,ypos));
+	  delete i_state;
+	  i_state=NULL;
+    }
+  
+}
+void UserInputHandler::ClickedOnEmptySpace(SDL_Rect cellrect)
+{
+  //maybe show tile info?
+  /*
+  if(!(the_turn->HasMoved() && the_turn->StandardActionDone()))
+    {
+      pair<int,int> cur_loc=camera->RectToPair(the_turn->TheCharacter()->getPosition());
+      pair<int,int> target_loc=camera->RectToPair(cellrect);
+      //cout<<"Astar From: "<<cur_loc.first<<','<<cur_loc.second<<"To: "<<target_loc.first<<','<<target_loc.second<<endl;
+      list<DIRECTION> whole_path = AStar::getPath( MapIndex::Instance(),cur_loc,target_loc);
+      if(whole_path.size()>0)
+	{ if(whole_path.size()<=the_turn->TheCharacter()->getGeneralStats()->getSpeed())
+	    {
+	      MapIndex::Instance()->CharIndexUpdate(the_turn->TheCharacter(),0,0);
+	      {
+		the_turn->TheCharacter()->Move(whole_path);
+		if(!the_turn->HasMoved())
+		  the_turn->SetMoved(true);
+		else
+		  the_turn->SetStandardAction(true);
+	      }
+
+	    }
+	}
+	}*/
+  //ABILITY
+
+}
+
+void UserInputHandler::ClickedOnCharacter(CellInfo *cellinfo)
+{
+  //Show character info?
+  /*
+  if(!the_turn->StandardActionDone())
+    {
+      if(cellinfo->getID()!=the_turn->TheCharacter()->getID())// If we're not clicking ourselves then: were attacking/Looting
+	{
+	  std::stringstream s;
+	  BaseCharacter *opponent= MapIndex::Instance()->getCharacter(cellinfo->getID());
+	  if(opponent->getGeneralStats()->getHp()<=0)
+	    {
+	      //Looting (Need Interface so...)
+	    }
+	  else
+	    {
+	      //Attack the bitch if we can see them
+
+	      if( MapIndex::Instance()->RayTrace(the_turn->TheCharacter()->getPosition().y/TILE_SIZE,the_turn->TheCharacter()->getPosition().x/TILE_SIZE
+						 ,opponent->getPosition().y/TILE_SIZE,opponent->getPosition().x/TILE_SIZE))
+		{
+		  if(the_turn->TheCharacter()->Attack(opponent))
+		    {
+		      //We can so: tell the Engine we attacked
+		      the_turn->SetStandardAction(true);
+		    }
+		}
+	    }
+	}
+      else
+	{
+	  //We Clicked on ourselves uhm dunno what we're doing? maybe inventory ? or Info?
+
+	}
+	}*/
+}
+
+
+void UserInputHandler::ClickedOnObject(CellInfo *cellinfo)
+{
+  /*
+  if(!the_turn->StandardActionDone())
+    {
+      Item *item=MapIndex::Instance()->getItem(cellinfo->getID());
+      if(item)
+	{
+	  the_turn->TheCharacter()->AddItemToInventory(item);
+	}
+	}*/
+}
+
+void UserInputHandler::RightClick(SDL_Event *event)
+{
+  //Handle the right click menu
+
+}

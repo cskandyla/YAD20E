@@ -1,0 +1,158 @@
+#include "animation.h"
+#include <iostream>
+using namespace std;
+Anim::Anim()
+{
+    this->x=0;
+    this->y=0;
+    this->w=0;
+    this->h=0;
+    this->numframes=0;
+    this->current_frame=0;
+    this->done=false;
+    this->frames=NULL;
+    this->fps=0.1;
+}
+
+Anim::Anim(int x,int y,int w,int h,int numframes)
+{
+    this->x=x;
+    this->y=y;
+    this->w=w;
+    this->h=h;
+    this->numframes=numframes;
+    this->current_frame=0;
+    this->frames=NULL;
+    frames=new SDL_Rect[numframes];
+    for(int i=0; i<numframes; i++)
+    {
+        frames[i].x=x+i*w;
+        frames[i].y=y;
+        frames[i].w=w;
+        frames[i].h=h;
+
+    }
+    Reset();
+    this->fps=0.4;
+
+}
+Anim::Anim(int x,int y,int w,int h,int numframes,float fps)
+{
+    this->x=x;
+    this->y=y;
+    this->w=w;
+    this->h=h;
+    this->numframes=numframes;
+    this->current_frame=0;
+
+
+    this->frames=NULL;
+    frames=new SDL_Rect[numframes];
+    for(int i=0; i<numframes; i++)
+    {
+        frames[i].x=x+i*w;
+        frames[i].y=y;
+        frames[i].w=w;
+        frames[i].h=h;
+
+    }
+    Reset();
+    this->fps=fps;
+
+}
+
+Anim::~Anim()
+{
+  if(frames)
+    {
+      delete[] frames;
+    }
+
+}
+
+
+void Anim::setanim(int x,int y,int numframes)
+{
+    this->x=x;
+    this->y=y;
+    this->numframes=numframes;
+    if(frames!=NULL)
+    {
+        delete[] frames;
+
+    }
+    frames=new SDL_Rect[numframes];
+    for(int i=0; i<numframes; i++)
+    {
+        frames[i].x=x+i*w;
+        frames[i].y=y;
+        frames[i].w=w;
+        frames[i].h=h;
+
+    }
+    this->current_frame=0;
+    this->done=false;
+    Reset();
+}
+
+void Anim::setanim(int x,int y,int w,int h,int numframes)
+{
+    this->x=x;
+    this->y=y;
+    this->w=w;
+    this->h=h;
+    this->numframes=numframes;
+    this->current_frame=0;
+    if(frames!=NULL)
+    {
+        delete[] frames;
+
+    }
+    frames=new SDL_Rect[numframes];
+    for(int i=0; i<numframes; i++)
+    {
+        frames[i].x=x+i*w;
+        frames[i].y=y;
+        frames[i].w=w;
+        frames[i].h=h;
+
+    }
+    Reset();
+}
+
+SDL_Rect* Anim::getCurFrame()
+{
+  if((int)(current_frame)<numframes)
+    return &frames[(int)(current_frame)];
+  else
+    return &frames[numframes-1];
+}
+
+
+void Anim::run()
+{
+    current_frame+=fps;
+    if((int)current_frame==numframes)
+      {
+	done=true;
+      }
+
+}
+
+
+void Anim::Reset()
+{
+    done=false;
+    current_frame=0;
+
+}
+
+void Anim::PrintFrameStats()
+{
+    for(int i=0; i<numframes; i++)
+    {
+        cout<<i<<endl;
+        cout<<frames[i].x<<", "<<frames[i].y<<"  ,  "<<frames[i].w<<", "<<frames[i].h<<endl;
+
+    }
+}

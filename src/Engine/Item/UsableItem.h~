@@ -1,0 +1,13 @@
+#include "Item.h"
+
+#ifndef __USABLEITEM_H_
+#define __USABLEITEM_H_
+
+class UsableItem
+{
+
+
+};
+
+#endif
+

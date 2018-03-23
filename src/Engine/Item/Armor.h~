@@ -1,0 +1,14 @@
+#include "VisibleItem.h"
+
+
+#ifndef __ARMOR__
+#define __ARMOR___
+class Armor:public VisibleItem
+{
+public:
+    Armor(ArmorInfo *info,Stats *BaseStats,string itemimg,AnimatedEntity *itementity);
+    ArmorInfo* getInfo();
+
+};
+
+#endif

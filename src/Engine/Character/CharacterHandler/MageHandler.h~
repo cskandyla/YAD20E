@@ -1,0 +1,15 @@
+#include "StateHandler.h"
+#ifndef __MAGE_HANDLER_H
+#define __MAGE_HANDLER_H
+
+
+class MageHandler:public StateHandler
+{
+ public:
+  MageHandler(BaseCharacter *the_char,enum STATE starting);
+  virtual void Update();
+  virtual void REACTION();
+  //virtual void COUNTERSPELL();
+};
+
+#endif

@@ -1,0 +1,194 @@
+#include "Renderer.h"
+#include "UserInputHandler.h"
+#include "KnowledgePool.h"
+#include "BaseRenderer.h"
+#include "WallSpell.h"
+#include "Caster.h"
+#include <algorithm>
+
+GameRenderer::GameRenderer(int visibility, Camera *camera):visibility(visibility),camera(camera)
+{
+  cursor_tile=new DrawableTile(0,0,MapIndex::Instance()->getMap()->getTileSize(),SDL_Color{80,80,80},127);
+  available_tile=new DrawableTile(0,0,MapIndex::Instance()->getMap()->getTileSize(),SDL_Color{0,255,0},127);
+}
+
+GameRenderer::~GameRenderer()
+{
+
+  delete cursor_tile;
+  delete available_tile;
+}
+
+void GameRenderer::ShowCursor(SDL_Texture *screen)
+{
+  Map *themap=MapIndex::Instance()->getMap();
+ int x,y;
+    SDL_GetMouseState(&x,&y);
+    pair<int,int> translated_pos=camera->Translate(x,y);
+    if(translated_pos.first>=0 && translated_pos.second>=0 &&
+       translated_pos.first<themap->getWidth()*themap->getTileSize() && translated_pos.second<themap->getHeight()*themap->getTileSize())
+      {
+	cursor_tile->Draw(translated_pos.first,translated_pos.second,screen);
+      }
+}
+
+void GameRenderer::Draw(SDL_Rect center,SDL_Texture *screen,Turn *the_turn)
+{
+
+  //if we're not moving the camera we dont need to redraw the map so...
+  Map *themap=MapIndex::Instance()->getMap();
+    int starti=center.x/themap->getTileSize();
+    int startj=center.y/themap->getTileSize();    
+    
+    SDL_Rect pos;
+    pos.x=0;
+    pos.y=0;
+    pos.w=themap->getTileSize();
+    pos.h=themap->getTileSize();
+    //Static Map
+
+    SDL_SetRenderTarget(BaseRenderer::Instance()->Renderer(),screen);
+    SDL_RenderClear(BaseRenderer::Instance()->Renderer());
+    
+    for(int i=starti+visibility; i>=starti-visibility; i--)
+        for(int j=startj+visibility; j>=startj-visibility; j--)
+        {
+            int x=starti+visibility-i;
+            int y=startj+visibility-j;
+            if(i>=0 && j>=0 && i<themap->getWidth() && j<themap->getHeight() && MapIndex::Instance()->getVisible(j,i))
+            {
+	      pos.x=i*themap->getTileSize();
+	      pos.y=j*themap->getTileSize();
+                if(themap->getLayerstoShow()==SALL || themap->getLayerstoShow()==SGROUND || themap->getLayerstoShow()==SVISIBLE)
+		  {
+		    BaseRenderer::Instance()->Render(themap->GetSurface(j,i,LGROUND),&pos);
+		  }
+                if(themap->getLayerstoShow()==SALL || themap->getLayerstoShow()==SOBJECT || themap->getLayerstoShow()==SVISIBLE)
+		  {
+		    BaseRenderer::Instance()->Render(themap->GetSurface(j,i,LOBJECT),&pos);
+		  }
+                if(themap->getLayerstoShow()==SALL || themap->getLayerstoShow()==SCOLISION)
+		  {
+		    BaseRenderer::Instance()->Render(themap->GetSurface(j,i,LCOLISION),&pos);
+		  }
+            }
+        }
+    SDL_SetRenderTarget(BaseRenderer::Instance()->Renderer(),NULL);
+    
+    //Show Targeted Tile also available moves/aoe indicator 
+    if(the_turn->GetUserInputHandler() && the_turn->GetUserInputHandler()->GetState())
+      {
+	vector<pair<int,int> > available_tiles=the_turn->GetUserInputHandler()->GetState()->GetTiles();
+	for(int i=0;i<available_tiles.size();i++)
+	  {
+	     available_tile->Draw(available_tiles[i].second*themap->getTileSize(),available_tiles[i].first*themap->getTileSize(),screen);
+	  }
+      }
+    ShowCursor(screen);
+    
+
+    //Dynamic Map find a way to handle
+    
+    /*  for(int i=starti-visibility; i<starti+visibility; i++)
+        for(int j=startj-visibility; j<startj+visibility; j++)
+        {
+	  //Reconfigure to Place active  Character over anything else pass turn? -- Draw last // order by y 
+	  if(i>=0 && j>=0 && i<themap->getWidth() && j<themap->getHeight() &&  MapIndex::Instance()->getVisible(j,i))
+            {
+                CellInfo *cinfo= MapIndex::Instance()->getCell(j,i);
+                if(cinfo!=NULL && cinfo->getType()==CHARACTER_T )
+                {
+		  KnowledgePool::Instance()->getCharacter(cinfo->getID())->Draw(screen);//->
+                }
+                else if(cinfo!=NULL && cinfo->getType()==OBJECT_T)
+                {
+		  KnowledgePool::Instance()->getItem(cinfo->getID())->Show(screen);
+                }
+            }
+        }*/
+	
+	DrawDynamicEntities(starti,startj,screen);
+    
+}
+
+bool sort_dynamic_map_elements(Dynamic_Map_Element elem1,Dynamic_Map_Element elem2)
+{
+  return (elem1.pos.second<elem2.pos.second);
+}
+
+void GameRenderer::DrawDynamicEntities(int starti,int startj,SDL_Texture *screen)
+{
+   Map *themap=MapIndex::Instance()->getMap();
+   int tile_size=themap->getTileSize();
+  vector<Dynamic_Map_Element> dyn_elements;
+    for(int i=starti-visibility; i<starti+visibility; i++)
+        for(int j=startj-visibility; j<startj+visibility; j++)
+        {
+	  //Reconfigure to Place active  Character over anything else pass turn? -- Draw last // order by y 
+	  if(i>=0 && j>=0 && i<themap->getWidth() && j<themap->getHeight() &&  MapIndex::Instance()->getVisible(j,i))
+            {
+                CellInfo *cinfo= MapIndex::Instance()->getCell(j,i);
+                if(cinfo!=NULL && cinfo->getType()==CHARACTER_T /* && KnowledgePool::Instance()->getCharacter(cinfo->getID())!=the_turn->TheCharacter()*/)
+                {
+		  //KnowledgePool::Instance()->getCharacter(cinfo->getID())->Draw(screen);//->
+		  Dynamic_Map_Element elem;
+		  pair<int,int> c_pos(KnowledgePool::Instance()->getCharacter(cinfo->getID())->getPosition().x/tile_size,KnowledgePool::Instance()->getCharacter(cinfo->getID())->getPosition().y/tile_size);
+		  elem.pos=c_pos;
+		  elem.obj_ptr=KnowledgePool::Instance()->getCharacter(cinfo->getID());
+		  elem.obj_type=D_CHARACTER;
+		  dyn_elements.push_back(elem);
+		  //also add all wallspells
+		  Caster *caster=dynamic_cast<Caster*>(KnowledgePool::Instance()->getCharacter(cinfo->getID()));
+		  if(caster)
+		    {
+		      for(int k=0;k<caster->GetEotSpells().size();k++)
+			{
+			  WallSpell *wall_spell=dynamic_cast<WallSpell*>(caster->GetEotSpells()[k]);
+			  if(wall_spell)
+			    {
+
+			      pair<int,int> pos=wall_spell->GetSpellStats()->GetTarget();
+			      pos.first=pos.first/tile_size;
+			      pos.second=pos.second/tile_size;
+			      Dynamic_Map_Element spell_elem;
+			      spell_elem.pos=pair<int,int>(pos);
+			      spell_elem.obj_ptr=wall_spell;
+			      spell_elem.obj_type=D_WALLSPELL;
+			      dyn_elements.push_back(spell_elem);
+			    }
+			}
+		    }
+		}
+                else if(cinfo!=NULL && cinfo->getType()==OBJECT_T)
+                {
+		  //KnowledgePool::Instance()->getItem(cinfo->getID())->Show(screen);
+		  Dynamic_Map_Element elem;
+		  elem.pos=pair<int,int>(i,j);
+		  elem.obj_ptr=KnowledgePool::Instance()->getItem(cinfo->getID());
+		  elem.obj_type=D_ITEM;
+		  dyn_elements.push_back(elem);
+                }
+            }
+        }
+    std::sort(dyn_elements.begin(),dyn_elements.end(),sort_dynamic_map_elements);
+
+    for(int i=0;i<dyn_elements.size();i++)
+      {
+	cout<<"Dynamic Object:"<<dyn_elements[i].pos.first<<'-'<<dyn_elements[i].pos.second<<endl;
+	if(dyn_elements[i].obj_type==D_CHARACTER)
+	  {
+	    ((BaseCharacter*)dyn_elements[i].obj_ptr)->Draw(screen);
+	  }
+	else if(dyn_elements[i].obj_type==D_ITEM)
+	  {
+	    ((VisibleItem*)dyn_elements[i].obj_ptr)->Draw(screen);
+	  }
+	else if(dyn_elements[i].obj_type==D_WALLSPELL)
+	  {
+	    ((WallSpell*)dyn_elements[i].obj_ptr)->Draw(screen);
+	  }
+      }
+}
+
+
+

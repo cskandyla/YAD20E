@@ -1,0 +1,24 @@
+FIXES:
+	Renderer:Fix layers in renderer(spells and walls)
+	Design:Allow Walls on Ocuppied?
+	SpellEffects:Wall not cleaning up correctly
+	Rendeder/MapIndex:VisibilityBug(near objects that block vision but are not walls)
+	Pathing Computation(compute actual path)[maybe pre-compute]
+	MapIndexing and doodads(Add another level?)[can also be used for destructibles]
+
+ADD:
+	AI:Dynamically Set Targets
+	UI:Use button in interface
+	UI:Maybe some kind of class based background?
+	UI:Log Toggle?
+	LUA:Dynamically Set AI
+	LUA/GameEngine:Dynamically Change Map
+	
+	
+
+
+
+
+
+
+

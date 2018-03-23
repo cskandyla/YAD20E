@@ -1,0 +1,19 @@
+#include "SpellEffects.h"
+#include <unordered_map>
+using std::unordered_map
+
+class SpellArchive
+{
+
+ private:
+  unordered_map<string,void (*Effect)(SpellStats *sp_stats)> spells;
+    static SpellArchive* m_index;
+    MapIndex();
+ public:
+    SpellArchive* Instance();
+    void RegisterSpell(string name, void (*Effect)(SpellStats *sp_stats));
+    (void (*Effect)(SpellStats *sp_stats))* GetSpell();
+    
+    
+
+};

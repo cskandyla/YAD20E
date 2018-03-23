@@ -1,0 +1,6 @@
+#include "DrawableTile.h"
+DrawableTile::DrawableTile(int x,int y,int size)
+ {
+
+ }
+void Draw(int x,int y,SDL_Surface *screen);

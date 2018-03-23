@@ -1,0 +1,12 @@
+#include "UsableItem.h"
+
+UsableItem::UsableItem(ItemInfo *info,Stats *BaseStats,string itemimg,Spell_Effect_t effect,SpellStats *sp_stats):Item(info,BaseStats,itemimg),effect(effect),sp_stats(sp_stats)
+{
+  
+}
+
+void UsableItem::Use(pair<int,int> target)
+{
+  //Just set target and user effect
+
+}

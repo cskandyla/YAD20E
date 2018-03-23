@@ -1,0 +1,22 @@
+#include "Spell.h"
+#include "animation.h"
+#ifndef __LINESPELL__
+#define __LINESPELL__
+
+class LineSpell: public Spell
+{
+private:
+  //AnimatedEntity *line_entity;//3 frames start mid end and sequence acording to direction
+  Entity *line_entity;
+  vector<SDL_Rect> locations;//holds the location of each frame we're drawing for horizontal: (0,width,width*2,width*3)
+  vector<Anim> anims;//should allways be 2 
+  int xpos,ypos;
+public:
+  LineSpell(SpellInfo *spell_info,BaseCharacter *caster,void (*Effect)(SpellStats *sp_stats),Entity *line_entity);
+  virtual void Update(float time);//
+  virtual void Draw(SDL_Texture *screen);
+  virtual void OnCast();
+  virtual void OnDone();
+};
+
+#endif

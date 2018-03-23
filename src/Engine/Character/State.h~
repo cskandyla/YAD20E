@@ -1,0 +1,5 @@
+#ifndef __STATE_H_
+#define __STATE_H_
+enum STATE {STAND_S,ATTACK_S,MOVE_S,CAST_S,DYING_S,DEAD_S,LOOP_S};
+
+#endif

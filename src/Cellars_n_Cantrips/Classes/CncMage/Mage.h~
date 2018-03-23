@@ -1,0 +1,43 @@
+
+#include <unordered_map>
+#include <set>
+#include <string>
+using std::unordered_map;
+using std::multiset;
+using std::set;
+using std::string;
+#include "Caster.h"
+#include "Spell.h"
+
+#ifndef __MAGE__
+#define __MAGE__
+//Lvl1:  --
+//Lvl2:  School Specialization
+//Lvl3:  --
+//Lvl4: +2 Ranks Evocation for Level rounds | Push all opponents away Level Squares  | + Level*1.5 Squares next round 
+//Lvl5:  --
+//Lvl6:  Arcane Mastery
+enum MAGE_MASTERY{M_ARCANE_M,M_SPELL_M,M_NO_M};
+//enum MAGE_SCHOOLS{EVOCATION,ABJURATION,ALTERATION};
+class Mage:public Caster
+{
+ private:
+  BaseCharacter *counter_target;//has to be a caster so why bother?
+ public:
+  Mage(AnimatedEntity *base,Info *myinfo, Attributes *BaseAttributes,GeneralStats *generalStats,CombatStats *combatStats);
+  Mage(AnimatedEntity *base,Info *myinfo, Attributes *BaseAttributes,GeneralStats *generalStats,CombatStats *combatStats,enum SPELL_SCHOOL school ,enum MAGE_MASTERY mastery);
+  virtual ~Mage();//Destroy the spells
+  //Mage does not expend level-0 slots also add bonuses;
+  virtual bool Prepare(string spellName);
+  virtual bool LearnSpell(Spell *the_spell);
+  virtual bool Reaction(BaseCharacter *ent);
+
+  //feats
+  void Counterspell(BaseCharacter *target);
+  void SchoolSpecialization(enum SPELL_SCHOOL school);
+  void SpellMastery();
+  void ArcaneMastery();
+  
+};
+
+#endif

@@ -1,0 +1,38 @@
+#include "MageHandler.h"
+
+MageHandler::MageHandler(BaseCharacter *the_char,enum STATE starting):StateHandler(the_char,starting)
+{
+
+}
+void MageHandler::Update()
+{
+switch (state)
+    {
+    case STAND_S:
+      STAND();
+      break;
+    case ATTACK_S:
+      ATTACK();
+      break;
+    case MOVE_S:
+      MOVE();
+      break;
+    case CAST_S:
+      CAST();
+      break;
+    case REACTION_S:
+      REACTION();
+      break;
+    case DYING_S:
+      DYING();
+      break;
+    case DEAD_S:
+      DEAD();
+      break;
+   
+    }
+}
+void MageHandler::REACTION()
+{
+
+}

@@ -1,0 +1,18 @@
+CC=g++ 
+CFLAGS=-std=c++11  -O2 
+LDFLAGS= -lSDL2 -lSDL2_ttf -lSDL2_mixer -lSDL2_image -lpng -lpugixml -llua5.2
+SOURCES= src/*.cpp src/Animation/*.cpp src/Character/*.cpp src/Character/StateHandler/*.cpp src/Character/Classes/*.cpp src/Entity/*.cpp src/Info-Stats/*.cpp src/Item/*.cpp src/map/*.cpp \
+src/Spells-Proj/*.cpp src/Spells-Proj/SpellEffects/*.cpp \
+src/utility/*.cpp src/MapIndex/*.cpp src/Graphics/*.cpp src/GameEngine/*.cpp src/AI/*.cpp src/AI/States/*.cpp src/AI/Modes/*.cpp src/LUA/*.cpp src/KnowledgeBase/*.cpp src/UI/*.cpp
+OBJECTS=$(SOURCES:.cpp=.o)
+EXECUTABLE=YAD20E
+INC_PATH = -I /usr/include/lua5.2 -I src -I src/Animation -I src/Character -I src/Character/StateHandler -I src/Character/Classes -I src/Entity -I src/Info-Stats -I src/Item -I src/map -I src/Spells-Proj -I \
+src/Spells-Proj/SpellEffects -I src/utility \
+-I src/MapIndex -I src/Graphics -I src/GameEngine -I src/AI -I src/AI/States -I src/AI/Modes  -I src/LUA -I src/KnowledgeBase -I src/UI
+LINK_PATH= -L /usr/lib/x86_64-linux-gnu
+all:
+	$(CC) $(INC_PATH) $(SOURCES) $(CFLAGS) $(LDFLAGS) -o  $(EXECUTABLE)
+
+
+
+

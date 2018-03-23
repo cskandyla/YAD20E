@@ -1,0 +1,406 @@
+#include "BasicCharacter.h"
+#include <iostream>
+#include <sstream>
+using std::cout;
+using std::endl;
+using std::stringstream;
+
+
+BaseCharacter::BaseCharacter(AnimatedEntity *base,Info *myinfo,Stats *mystats):BaseEntity(base),info(myinfo),Basestats(mystats)
+{
+    this->hasMoved=false;
+    this->hasAttacked=false;
+    this->chest=NULL;
+    this->head=NULL;
+    this->mainHand=NULL;
+    this->legs=NULL;
+    this->secondaryHand=NULL;
+    this->currentstats=Basestats;
+    this->Log=NULL;
+    state=STAND;
+    projectile=NULL;
+
+}
+
+
+int BaseCharacter::getID()
+{
+    return ID;
+}
+
+void BaseCharacter::setID(int id)
+{
+    ID=id;
+}
+
+void BaseCharacter::Draw(SDL_Surface *screen)
+{
+    this->BaseEntity->Draw(screen);
+
+    if(this->chest!=NULL)
+        this->chest->Draw(screen);
+    if(this->mainHand!=NULL)
+        this->mainHand->Draw(screen);
+}
+
+
+void BaseCharacter::SetAnimation(ANIMS anim)
+{
+    this->BaseEntity->setAnimation(anim);
+    if(mainHand!=NULL)
+        this->mainHand->setAnimation(anim);
+    if(chest!=NULL)
+        this->chest->setAnimation(anim);
+}
+
+void BaseCharacter::Update(float time)
+{
+    this->BaseEntity->Update(time);
+    if(this->mainHand!=NULL)
+        this->mainHand->Update(time);
+    if(this->chest!=NULL)
+        this->chest->Update(time);
+
+
+    list<Effect*>::iterator it;
+    for(it=status_effects.begin(); it!=status_effects.end(); ++it)
+    {
+        if((*it)->getDuration()==0 && (*it)->IsPermanent()==false)
+        {
+
+            ToLog("Removing effect:"+(*it)->getName());
+            delete *it;
+            it=status_effects.erase(it);
+        }
+        else
+        {
+
+            ToLog("Applying effect:"+(*it)->getName());
+            (*it)->ApplyEffect();
+        }
+    }
+
+    if(state==MOVE)
+    {
+        if(path.empty() && BaseEntity->reachedDestination())
+        {
+            state=STAND;
+            SetAnimation(STAND_R);
+        }
+        else if(!path.empty() && BaseEntity->reachedDestination() )
+        {
+
+            cout<<"GOT HERE PATH TOP IS:"<<path.front()<<endl;
+            switch  (path.front())
+            {
+            case UP:
+            {
+                SetAnimation(WALK_U);
+                BaseEntity->SetDestination(BaseEntity->getPosition().x,BaseEntity->getPosition().y-TILE_SIZE);
+
+                if(mainHand!=NULL)
+                {
+                    mainHand->SetDestination(mainHand->getPosition().x,mainHand->getPosition().y-TILE_SIZE);
+
+                }
+                if(chest!=NULL)
+                {
+                    chest->SetDestination(chest->getPosition().x,chest->getPosition().y-TILE_SIZE);
+                }
+            }
+            break;
+            case DOWN:
+            {
+                SetAnimation(WALK_D);
+                BaseEntity->SetDestination(BaseEntity->getPosition().x,BaseEntity->getPosition().y+TILE_SIZE);
+                if(mainHand!=NULL)
+                {
+                    mainHand->SetDestination(mainHand->getPosition().x,mainHand->getPosition().y+TILE_SIZE);
+                }
+                if(chest!=NULL)
+                {
+                    chest->SetDestination(chest->getPosition().x,chest->getPosition().y+TILE_SIZE);
+                }
+            }
+            break;
+            case LEFT:
+            {
+                SetAnimation(WALK_L);
+                BaseEntity->SetDestination(BaseEntity->getPosition().x-TILE_SIZE,BaseEntity->getPosition().y);
+                if(mainHand!=NULL)
+                {
+                    mainHand->SetDestination(mainHand->getPosition().x-TILE_SIZE,mainHand->getPosition().y);
+                }
+                if(chest!=NULL)
+                {
+                    chest->SetDestination(chest->getPosition().x-TILE_SIZE,chest->getPosition().y);
+                }
+            }
+            break;
+            case RIGHT:
+            {
+
+                SetAnimation(WALK_R);
+                BaseEntity->SetDestination(BaseEntity->getPosition().x+TILE_SIZE,BaseEntity->getPosition().y);
+                if(mainHand!=NULL)
+                {
+                    mainHand->SetDestination(mainHand->getPosition().x+TILE_SIZE,mainHand->getPosition().y);
+                }
+                if(chest!=NULL)
+                {
+                    chest->SetDestination(chest->getPosition().x+TILE_SIZE,chest->getPosition().y);
+                }
+            }
+            break;
+
+
+            }
+            path.pop_front();
+
+        }
+    }
+    else if(state==STAND)
+    {
+        SetAnimation(STAND_R);
+    }
+    else if(state==ATTACK)
+    {
+        //SetAnimation(SLASH_R);
+        if(BaseEntity->getCur_Anim()->Done())
+        {   if(projectile!=NULL)
+            projectile->MakeActive(true);
+            state=STAND;
+            SetAnimation(STAND_R);
+        }
+    }
+
+
+
+
+}
+
+void BaseCharacter::SwitchMainWeapon(Weapon *mhand)
+{
+    WeaponInfo *winfo=(WeaponInfo*)mhand->getInfo();
+
+    {
+        if(mhand->getInfo()->getItemSlot()==MainWeapon)
+        {
+            cout<<"Equiping: "<<mhand->getInfo()->getName()<<endl;
+            this->mainHand=mhand;
+            ToLog("Weapon Loaded: "+mainHand->getInfo()->getName());
+        }
+    }
+    //ToLog(winfo->InfoString());
+
+
+}
+
+
+void BaseCharacter::SwitchArmor(VisibleItem *armor)
+{
+    if(armor->getInfo()->getItemSlot()==Chest)
+    {
+        this->chest=armor;
+    }
+
+}
+
+Item* BaseCharacter::getSlot(ITEMSLOT slot)
+{
+
+    switch(slot)
+    {
+    case Head:
+        return head;
+        break;
+    case Chest:
+        return chest;
+        break;
+    case Legs:
+        return legs;
+        break;
+    case Neck:
+        return neck ;
+        break;
+    case Hand1:
+        return hand1 ;
+        break;
+    case Hand2:
+        return hand2 ;
+        break;
+    case MainWeapon:
+        return mainHand ;
+        break;
+    case SecondaryWeapon:
+        return secondaryHand ;
+        break;
+    }
+
+}
+
+void BaseCharacter::Move(list<DIRECTION> path)
+{
+    this->path=path;
+    state=MOVE;
+    std::cout<<"MOVE CALLED"<<std::endl;
+
+}
+
+void BaseCharacter::Ability()
+{
+
+}
+
+void BaseCharacter::SetPosition(int xpos,int ypos)
+{
+    this->BaseEntity->setPosition(xpos,ypos);
+    if(mainHand!=NULL)
+        mainHand->setPosition(xpos,ypos);
+    if(chest!=NULL)
+        chest->setPosition(xpos,ypos);
+}
+
+void BaseCharacter::SetVelocity(int xvel,int yvel)
+{
+    this->BaseEntity->SetVelocity(xvel,yvel);
+    if(mainHand!=NULL)
+        mainHand->SetVelocity(xvel,yvel);
+    if(chest!=NULL)
+        chest->SetVelocity(xvel,yvel);
+}
+
+void BaseCharacter::Equip(Item *item)
+{
+    switch(item->getInfo()->getItemSlot())
+    {
+    case Head:
+        head=dynamic_cast<VisibleItem*>(item);
+        break;
+    case Chest:
+        chest=dynamic_cast<VisibleItem*>(item);
+        break;
+    case Legs:
+        legs=dynamic_cast<VisibleItem*>(item);
+        break;
+    case Neck:
+        neck=item;
+        break;
+    case Hand1:
+        hand1=item;
+        break;
+    case Hand2:
+        hand2=item;
+        break;
+    case MainWeapon:
+        mainHand=dynamic_cast<Weapon*>(item);
+        break;
+    case SecondaryWeapon:
+        secondaryHand=dynamic_cast<Weapon*>(item);
+        break;
+    case Ammo:
+        ammo=item;
+    }
+}
+
+
+void BaseCharacter::Attack(BaseCharacter *ent)
+{
+    state=ATTACK;
+    if(mainHand->getInfo()->getRange()>0)
+    {
+
+        if(mainHand->getInfo()->getDamageType()==SLASHING || mainHand->getInfo()->getDamageType()==FORCE)
+        {
+
+            int x=this->getPosition().x-ent->getPosition().x;
+            int y=this->getPosition().y-ent->getPosition().y;
+            if(abs(x)>abs(y))
+            {
+                if(x>0)
+                {
+                    SetAnimation(SLASH_L);
+                }
+                else
+                {
+                    SetAnimation(SLASH_R);
+                }
+            }
+            else
+            {
+                if(y>0)
+                {
+                    SetAnimation(SLASH_U);
+                }
+                else
+                {
+                    SetAnimation(SLASH_D);
+                }
+
+            }
+
+        }
+        if(mainHand->getInfo()->getDamageType()==PIERCING && mainHand->getInfo()->getRange()==1 )
+        {
+
+            if(this->getPosition().x-ent->getPosition().x<0)
+            {
+                SetAnimation(THRUST_R);
+            }
+            else if(this->getPosition().x-ent->getPosition().x>0)
+            {
+                SetAnimation(THRUST_L);
+            }
+            else if(this->getPosition().y-ent->getPosition().y<0)
+            {
+                SetAnimation(THRUST_D);
+            }
+            else if(this->getPosition().y-ent->getPosition().y>0)
+            {
+                SetAnimation(THRUST_U);
+            }
+        }
+    }
+}
+
+void BaseCharacter::ToLog(string s)
+{
+    if(Log!=NULL)
+    {
+        if(s.find('\n')==string::npos)
+        {
+            Log->AddText(s,255,255,255);
+        }
+        else
+        {
+            int pos=s.find('\n');
+            while(pos!=string::npos)
+            {
+
+                Log->AddText(s.substr(0,pos),255,255,255);
+                s=s.substr(pos+1,s.length());
+                pos=s.find('\n');
+            }
+            Log->AddText(s,255,255,255);
+        }
+    }
+
+
+}
+
+void BaseCharacter::setState(STATE s)
+{
+    this->state=s;
+}
+
+
+STATE BaseCharacter::getState()
+{
+    return this->state;
+}
+
+void BaseCharacter::SetProjectile(Projectile *proj)
+{
+this->projectile=proj;
+proj->SetPosition(BaseEntity->getPosition().x,BaseEntity->getPosition().y-proj->getPosition().h);
+}

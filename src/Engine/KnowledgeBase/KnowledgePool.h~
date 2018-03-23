@@ -1,0 +1,32 @@
+#include "Team.h"
+#include <unordered_map>
+#include <string>
+#include "BasicCharacter.h"
+#include "Item.h"
+using std::unordered_map;
+using std::string;
+//#include "Quest.h"
+#ifndef __KNOWLEDGE_POOL
+#define __KNOWLEDGE_POOL
+
+//Singleton since it's probably gonna get overused
+class KnowledgePool
+{
+ private:
+  static KnowledgePool* k_pool;
+  KnowledgePool();
+  
+  unordered_map <string,Team*> teams;
+  std::unordered_map<unsigned int,BaseCharacter*> characters;
+  std::unordered_map<unsigned int,Item*> items;
+  std::unordered_map<unsigned int,AIEntity*> *AIEntities;
+  //set<Quest*> Quests;
+ public:
+  static KnowledgePool* Instance();
+  void Init();
+  void Free();
+  void AddTeam(Team* team);
+  Team* GetTeam(string team);
+  
+};
+#endif

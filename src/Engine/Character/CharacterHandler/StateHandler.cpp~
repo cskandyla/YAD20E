@@ -1,0 +1,144 @@
+#include "StateHandler.h"
+
+
+StateHandler::StateHandler(BaseCharacter *the_char,enum STATE starting):the_char(the_char),state(starting)
+{
+
+
+}
+
+
+void StateHandler::SetState(enum STATE state)
+{
+  this->state=state;
+}
+enum STATE StateHandler::GetState()
+{
+  return this->state;
+}
+void StateHandler::STAND()
+{
+
+}
+void StateHandler::ATTACK()
+{
+
+}
+void StateHandler::MOVE()
+{
+  
+  if(state==MOVE_S)
+    {
+      list<DIRECTION> path=the_char->GetPath();
+      AnimatedEntity* BaseEntity=the_char->GetBaseEntity();
+      Weapon*         mainHand=the_char->GetMainHand();
+      Armor*          chest=the_char->GetChest();
+      if(path.empty() && BaseEntity->reachedDestination())
+        {
+	  state=STAND_S;
+
+        }
+      else if(!path.empty() && BaseEntity->reachedDestination() )
+        {
+
+	  //  cout<<"GOT HERE PATH TOP IS:"<<path.front()<<endl;
+	  switch  (path.front())
+            {
+            case UP:
+	      {
+                the_char->SetDirection(UP);
+                the_char->SetAnimation(WALK_U);
+                BaseEntity->SetDestination(BaseEntity->getPosition().x,BaseEntity->getPosition().y-TILE_SIZE);
+
+                if(mainHand!=NULL)
+		  {
+                    mainHand->SetDestination(mainHand->getPosition().x,mainHand->getPosition().y-TILE_SIZE);
+
+		  }
+                if(chest!=NULL)
+		  {
+                    chest->SetDestination(chest->getPosition().x,chest->getPosition().y-TILE_SIZE);
+		  }
+	      }
+	      break;
+            case DOWN:
+	      {
+                the_char->SetDirection(DOWN);
+                the_char->SetAnimation(WALK_D);
+                BaseEntity->SetDestination(BaseEntity->getPosition().x,BaseEntity->getPosition().y+TILE_SIZE);
+                if(mainHand!=NULL)
+		  {
+                    mainHand->SetDestination(mainHand->getPosition().x,mainHand->getPosition().y+TILE_SIZE);
+		  }
+                if(chest!=NULL)
+		  {
+                    chest->SetDestination(chest->getPosition().x,chest->getPosition().y+TILE_SIZE);
+		  }
+	      }
+	      break;
+            case LEFT:
+	      {
+                the_char->SetDirection(LEFT);
+                the_char->SetAnimation(WALK_L);
+                BaseEntity->SetDestination(BaseEntity->getPosition().x-TILE_SIZE,BaseEntity->getPosition().y);
+                if(mainHand!=NULL)
+		  {
+                    mainHand->SetDestination(mainHand->getPosition().x-TILE_SIZE,mainHand->getPosition().y);
+		  }
+                if(chest!=NULL)
+		  {
+                    chest->SetDestination(chest->getPosition().x-TILE_SIZE,chest->getPosition().y);
+		  }
+	      }
+	      break;
+            case RIGHT:
+	      {
+                the_char->SetDirection(RIGHT);
+                the_char->SetAnimation(WALK_R);
+                BaseEntity->SetDestination(BaseEntity->getPosition().x+TILE_SIZE,BaseEntity->getPosition().y);
+                if(mainHand!=NULL)
+		  {
+                    mainHand->SetDestination(mainHand->getPosition().x+TILE_SIZE,mainHand->getPosition().y);
+		  }
+                if(chest!=NULL)
+		  {
+                    chest->SetDestination(chest->getPosition().x+TILE_SIZE,chest->getPosition().y);
+		  }
+	      }
+	      break;
+
+
+            }
+	  path.pop_front();
+
+        }
+	      
+	    
+	
+    }
+  
+}
+
+
+void StateHandler::CAST()
+{
+
+
+}
+void StateHandler::DYING()
+{
+
+
+}
+void StateHandler::DEAD()
+{
+
+
+}
+void StateHandler::LOOP()
+{
+
+
+}
+  
+  

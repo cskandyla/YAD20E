@@ -1,0 +1,212 @@
+#include "MapIndex.h"
+#include <iostream>
+MapIndex::MapIndex(Map *themap)
+{
+
+    this->themap=themap;
+    this->informationgrid.resize(themap->getWidth());
+    for(int i=0; i<themap->getWidth(); i++)
+    {
+        this->informationgrid[i].resize(themap->getHeight());
+    }
+    for(int i=0; i<informationgrid.size(); i++)
+        for(int j=0; j<informationgrid[i].size(); j++)
+        {
+            informationgrid[i][j]=NULL;
+        }
+}
+
+
+
+string MapIndex::getTileInfo(int x, int y)
+{
+    std::stringstream s;
+    int xindex=x/themap->getTileSize()*themap->getTileSize()/themap->getTileSize();
+    int yindex=y/themap->getTileSize()*themap->getTileSize()/themap->getTileSize();
+    if(informationgrid[yindex][xindex]==NULL)
+        s<<"Coords: "<<x<<','<<y<<" Tile:"<<yindex<<","<<xindex<<" "<<themap->getCollisionTiles()[yindex][xindex]->getID()<<" Nothing Here";
+    else if(informationgrid[yindex][xindex]->getType()==OBJECT_T)
+    {
+        s<<items[informationgrid[yindex][xindex]->getID()]->getInfo()->getName();;
+    }
+    else if(informationgrid[yindex][xindex]->getType()==CHARACTER_T)
+    {
+        s<<characters[informationgrid[yindex][xindex]->getID()]->getInfo()->getName();;
+    }
+
+    return s.str();
+}
+
+
+ENTITY_TYPE MapIndex::getTileContent(int x,int y)
+{
+    int xindex=x/themap->getTileSize()*themap->getTileSize()/themap->getTileSize();
+    int yindex=y/themap->getTileSize()*themap->getTileSize()/themap->getTileSize();
+    if(informationgrid[yindex][xindex]!=NULL)
+    {
+
+        return informationgrid[yindex][xindex]->getType();
+    }
+    else return NOTHING;
+
+
+}
+
+
+
+BaseCharacter* MapIndex::getCharacter(unsigned int id)
+{
+
+
+    /* cout<<"all characters: "<<endl;
+
+     for(it=characters.begin(); it!=characters.end(); ++it)
+         cout<<it->first<<":"<<it->second->getInfo()->getName()<<endl;;*/
+    std::unordered_map<unsigned int,BaseCharacter*>::iterator it;
+    it=characters.find(id);
+    if(it==characters.end())
+    {
+        cout<<"Not Found"<<endl;
+        return NULL;
+    }
+
+    else
+    {
+        std::cout<<"found"<<it->first<<std::endl;
+        return it->second;
+
+    }
+
+
+}
+
+
+Item* MapIndex::getItem(unsigned int id)
+{
+
+    std::unordered_map<unsigned int,Item*>::iterator it;
+    it=items.find(id);
+    if(it==items.end())
+    {
+        cout<<"Not Found"<<endl;
+        return NULL;
+    }
+
+    else
+    {
+        std::cout<<"found"<<it->first<<std::endl;
+        return it->second;
+
+    }
+
+
+}
+
+CellInfo* MapIndex::getCell(int x,int y)
+{
+    if(x<=themap->getWidth() && y<=themap->getHeight())
+        return informationgrid[x][y];
+    else
+        return NULL;
+}
+
+
+bool MapIndex::AddCharacter(BaseCharacter* bchar)
+{
+
+    int x=bchar->getPosition().y/themap->getTileSize();
+    int y=bchar->getPosition().x/themap->getTileSize();
+
+    if(themap->getCollisionTiles()[y][x]->getID()!=1)
+    {
+        std::cout<<"Tile:"<<y<<","<<x<<endl;
+        informationgrid[x][y]=new CellInfo(characters.size(),CHARACTER_T);
+        std::cout<<"Adding "<<characters.size()<<" "<<bchar->getInfo()->getName()<<std::endl;
+        bchar->setID(characters.size());
+        pair<unsigned int,BaseCharacter*> p(characters.size(),bchar);
+        characters.insert(p);
+        themap->Set(y,x,1,LCOLISION);
+        return true;
+    }
+
+    return false;
+
+
+
+}
+
+bool MapIndex::AddItem(Item *it)
+{
+    int x=it->getPosition().y/themap->getTileSize();
+    int y=it->getPosition().x/themap->getTileSize();
+
+    if(themap->getCollisionTiles()[y][x]->getID()!=1)
+    {
+        std::cout<<"Tile:"<<y<<","<<x<<endl;
+        informationgrid[x][y]=new CellInfo(items.size(),OBJECT_T);
+        std::cout<<"Adding "<<items.size()<<" "<<it->getInfo()->getName()<<std::endl;
+        //bchar->setID(characters.size());
+        pair<unsigned int,Item*> p(items.size(),it);
+        items.insert(p);
+        themap->Set(y,x,1,LCOLISION);
+        return true;
+    }
+
+    return false;
+
+
+
+
+}
+
+bool MapIndex::RemoveItem(unsigned int id)
+{
+Item*item=getItem(id);
+int x=item->getPosition().y/TILE_SIZE;
+int y=item->getPosition().x/TILE_SIZE;
+delete informationgrid[x][y];
+informationgrid[x][y]=NULL;
+themap->Set(y,x,0,LCOLISION);
+
+items.erase(id);
+//delete item;
+return true;
+}
+
+bool MapIndex::CharIndexUpdate(BaseCharacter *selected,int xpos,int ypos)
+{
+
+    for(int i=0; i<informationgrid.size(); i++)
+    {
+        for(int j=0; j<informationgrid.size(); j++)
+        {
+            if(informationgrid[i][j]!=NULL)
+            {
+                if( informationgrid[i][j]->getType()==CHARACTER_T && informationgrid[i][j]->getID()==selected->getID() )
+                {
+                    std::cout<<":found:: "<<characters[informationgrid[i][j]->getID()]->getInfo()->getName()<<std::endl;
+                    std::cout<<":making:: "<<i<<','<<j<<"empty and not collidable"<<std::endl;
+                    std::cout<<":CollisionTile:<<"<<i<<','<<j<<" "<<themap->getCollisionTiles()[i][j]->getID()<<std::endl;
+                    int x=(selected->getPosition().y+ypos)/themap->getTileSize();
+                    int y=(selected->getPosition().x+xpos)/themap->getTileSize();
+                    if(themap->getCollisionTiles()[x][y]->getID()==0)
+                    {
+                        themap->Set(j,i,0,LCOLISION);
+                        delete informationgrid[i][j];
+                        informationgrid[i][j]=NULL;
+
+                        informationgrid[x][y]=new CellInfo(selected->getID(),CHARACTER_T);
+                        std::cout<<":registering new tileinfo and collision:: "<<y<<','<<x<<std::endl;
+                        themap->Set(y,x,1,LCOLISION);
+                        return true;
+                    }
+                }
+
+            }
+        }
+    }
+
+
+    return false;
+
+}

@@ -1,0 +1,267 @@
+#include "Caster.h"
+#include "StateHandler.h"
+#include "BaseRenderer.h"
+
+Caster::Caster(AnimatedEntity *base,Info *myinfo, Attributes *BaseAttributes,GeneralStats *generalStats,CombatStats *combatStats):BaseCharacter(base,myinfo,BaseAttributes,generalStats,combatStats)
+{
+  the_spell=NULL;
+  this->casterstats=new CasterStats(std_spells_tbl,std_ranks_tbl);
+  
+					  
+}
+
+Caster::Caster(AnimatedEntity *base,Info *myinfo, Attributes *BaseAttributes,GeneralStats *generalStats,CombatStats *combatStats,CasterStats *casterstats)
+  :BaseCharacter(base,myinfo,BaseAttributes,generalStats,combatStats),casterstats(casterstats)
+{
+  the_spell=NULL;
+}
+
+Caster::~Caster()
+{
+  unordered_map<string,Spell*>::iterator it;
+
+  for(it=Spells.begin();it!=Spells.end();++it)
+    {
+      delete it->second;
+    }
+  delete casterstats;
+
+}
+
+void Caster::Update(float t)
+{
+  BaseCharacter::Update(t);
+ 
+  for(int i=0;i<eotspells.size();i++)
+    {
+      eotspells[i]->Update(t);
+    }
+  
+  if(the_spell)
+    the_spell->Update(t);
+}
+
+
+void Caster::Draw(SDL_Texture *screen)
+{
+     for(int i=0;i<eotspells.size();i++)
+       {
+	 // eotspells[i]->Draw(screen);
+       }
+     
+     if(the_spell)
+       {
+	 if(GetDirection()==UP)
+	   {
+	     the_spell->Draw(screen);
+	     BaseCharacter::Draw(screen);
+	   }
+	 else
+	   {
+	     BaseCharacter::Draw(screen);
+	     the_spell->Draw(screen);
+	   }
+       }
+     else
+       {
+	 BaseCharacter::Draw(screen);
+       }
+}
+
+
+bool Caster::Active()
+{
+  //This is getting complicated
+  if(BaseCharacter::Active() ||  ( (the_spell  && the_spell->IsCast() &&  !the_spell->IsDone() ) ) )
+    return true;
+  return false;
+}
+
+bool Caster::LearnSpell(Spell *the_spell)
+{
+  Spells[the_spell->GetSpellInfo()->getName()]=the_spell;
+  the_spell->SetCaster(this);      
+  the_spell->GetSpellStats()->SetRank(GetCasterStats()->GetRank(school_string_to_enum(the_spell->GetSpellInfo()->getSchool())));
+}
+
+bool Caster::Prepare(string spellName)
+{
+  if(Spells.find(spellName)!=Spells.end())
+    {
+      Prepared.insert(spellName);
+      return true;
+    }
+  return false;
+}
+bool Caster::Forget(string spellName)
+{
+    if(Spells.find(spellName)!=Spells.end())
+    {
+      if(Prepared.find(spellName)!=Prepared.end())
+	{
+	  Prepared.erase(Prepared.find(spellName));
+	}
+    }
+
+}
+
+void Caster::HandleActiveSpells()
+{
+  //for each active spell just activate it's effect
+  for(int i=0;i<eotspells.size();i++)
+    {
+      eotspells[i]->Trigger();
+      if(eotspells[i]->GetDuration()==0)
+	{
+	  eotspells.erase(eotspells.begin()+i);
+	}
+    }
+}
+
+Spell* Caster::GetSpell()
+{
+  return the_spell;
+}
+
+Spell* Caster::GetSpell(string spellName)
+{
+  if(Spells.find(spellName)!=Spells.end())
+    {
+      return Spells[spellName];
+    }
+  return NULL;
+}
+
+void   Caster::SetSpell(Spell *spell)
+{
+  the_spell=spell;
+}
+
+bool Caster::CastSpell(string spellName,pair<int,int> target)
+{
+ the_spell=NULL;
+  //Search for the spell in the spellbook and Prepared
+  //if it exists cast it
+  unordered_map<string,Spell*>::iterator it=Spells.begin();
+  if(Spells.find(spellName)==Spells.end())
+    {
+      cout<<"Spell Not Prepared or Known"<<endl;
+      return false;
+    }
+  else  if(Prepared.find(spellName)!=Prepared.end()  && Spells.find(spellName)!=Spells.end())
+    {
+      the_spell=Spells[spellName];
+    }
+  if(the_spell!=NULL)
+    {
+      //Find a better place to put this 
+      the_spell->GetSpellStats()->SetTarget(target);
+      
+      if(the_spell->IsValidTarget())
+	{
+	  SetCastAnimation(target);
+	  stateHandler->SetState(CAST_S);
+	   if(the_spell->GetSpellStats()->GetLevel()>0)
+	     Prepared.erase(Prepared.find(spellName));
+	  return true;
+	}
+    }
+  return false;	  
+
+}
+vector<EOTSpell*>& Caster::GetEotSpells()
+{
+  return eotspells;
+}
+
+
+void Caster::SetCastAnimation(pair<int,int> pos)
+{
+  int x=this->getPosition().x-pos.first;
+  int y=this->getPosition().y-pos.second;
+  if(abs(x)>abs(y))
+    {
+      if(x>0)
+	{
+	  SetDirection(LEFT);
+	  SetAnimation(CAST_L);
+	}
+      else
+	{
+	  SetDirection(RIGHT);
+	  SetAnimation(CAST_R);  
+	}
+    }
+  else
+    {
+      if(y>0)
+	{
+	  SetDirection(UP);
+	  SetAnimation(CAST_U);
+	}
+      else
+	{
+	  SetDirection(DOWN);
+	  SetAnimation(CAST_D);
+	}
+
+    }
+}
+
+unsigned int Caster::GetNumPreparedSpells()
+{
+  return Prepared.size();
+}
+
+multiset<Spell*> Caster::GetPreparedSpells()
+{
+  multiset<Spell*> ret;
+  multiset<string>::iterator it;
+  for(it=Prepared.begin();it!=Prepared.end();++it)
+    {
+      if(Spells.find(*it)!=Spells.end())
+	ret.insert(Spells[*it]);
+    }
+  return ret;
+}
+
+set<Spell*> Caster::GetKnownSpells()
+{
+  set<Spell*> ret;
+  unordered_map<string,Spell*>::iterator it;
+  for(it = Spells.begin();it!=Spells.end();++it)
+    {
+      ret.insert(it->second);
+    }
+  return ret;
+}
+
+
+void Caster::AddEOTSpell(EOTSpell *eotspell)
+{
+  eotspells.push_back(eotspell);
+  the_spell->SetDone(true);
+  the_spell=NULL;
+}
+
+void Caster::OnTurnStart()
+{
+  BaseCharacter::OnTurnStart();
+  HandleActiveSpells();
+}
+
+void Caster::SetCasterStats(CasterStats *casterstats)
+{
+  if(casterstats)
+    delete casterstats;
+  this->casterstats=casterstats;
+}
+CasterStats* Caster::GetCasterStats()
+{
+  return this->casterstats;
+}
+
+int Caster::getNumSlots(int spell_level)
+{
+  return casterstats->GetSpellSlots(this->getGeneralStats()->getLevel()-1,spell_level);
+}

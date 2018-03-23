@@ -1,0 +1,17 @@
+#include "StateHandler.h"
+#ifndef __WARROR_HANDLER_H
+#define __WARROR_HANDLER_H
+
+
+class WarriorHandler:public StateHandler
+{
+ public:
+  WarriorHandler(BaseCharacter *the_char,enum STATE starting);
+  virtual void Update();
+  virtual void REACTION();
+  virtual void CLEAVE();
+  virtual void KNOCKDOWN();
+
+};
+
+#endif

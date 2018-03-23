@@ -1,0 +1,43 @@
+#include "map/map.h"
+#include "Character/BasicCharacter.h"
+#include "CellInfo.h"
+#include <string>
+#include <sstream>
+#include <map>
+using std::string;
+#include <unordered_map>
+using std::vector;
+using std::pair;
+using std::string;
+
+
+
+#ifndef __MAPINDEX__
+#define __MAPINDEX__
+
+
+class MapIndex
+{
+private:
+    Map *themap;
+    std::unordered_map<unsigned int,BaseCharacter*> characters;//
+    std::unordered_map<unsigned int,Item*> items;//
+    vector<vector<CellInfo*> > informationgrid;
+public:
+    MapIndex(Map *themap);
+    //Based on Coords
+    string getTileInfo(int x,int y);
+    ENTITY_TYPE getTileContent(int x,int y);
+    BaseCharacter* getCharacter(unsigned int id);
+    Item* getItem(unsigned int id);
+    bool AddCharacter(BaseCharacter *bchar);
+    bool AddItem(Item *it);
+    bool RemoveItem(unsigned int id);
+    CellInfo* getCell(int x,int y);
+    bool CharIndexUpdate(BaseCharacter *selected,int xpos,int ypos);
+
+
+
+
+};
+#endif // __MAPINDEX__

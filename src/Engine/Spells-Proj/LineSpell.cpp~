@@ -1,0 +1,30 @@
+#include "LineSpell.h"
+#include "Caster.h"
+#include "BaseRenderer.h"
+
+LineSpell::LineSpell(SpellInfo *spell_info,BaseCharacter *caster,void (*Effect)(SpellStats *sp_stats),Entity *line_entity): Spell(spell_info,caster,Effect),line_entity(line_entity)
+{
+}
+
+
+void LineSpell::Update(float time)
+{
+  //update position
+  //update based on the direction
+  //if(
+  
+}
+void LineSpell::Draw(SDL_Texture *screen)
+{
+  for(int i=0;i<locations.size();i++)
+    {
+      //Draw the correct "Frame" which is i%num_frames
+      
+    }
+}
+void LineSpell::OnCast()
+{
+}
+void LineSpell::OnDone()
+{
+}

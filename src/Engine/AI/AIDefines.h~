@@ -1,0 +1,20 @@
+
+
+#include "AIEntity.h"
+#include "AStar.h"
+#include "State.h"
+
+
+
+//STATES
+#include "States/State_Flee.h"
+#include "States/State_Seek.h"
+#include "States/State_Wait.h"
+#include "States/State_Chase.h"
+#include "States/State_Attack.h"
+#include "States/State_Wander.h"
+
+//MODES
+#include "Modes/Seeker.h"
+#include "Modes/Zombie.h"
+

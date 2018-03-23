@@ -1,0 +1,87 @@
+#include "WarriorHandler.h"
+#include "Warrior.h"
+#include "BasicCharacter.h"
+
+WarriorHandler::WarriorHandler(BaseCharacter *the_char,enum STATE starting):StateHandler(the_char,starting)
+{
+  
+}
+
+
+void WarriorHandler::Update()
+{
+    switch (state)
+    {
+    case STAND_S:
+      STAND();
+      break;
+    case ATTACK_S:
+      ATTACK();
+      break;
+    case MOVE_S:
+      MOVE();
+      break;
+    case CLEAVE_S:
+      CLEAVE();
+      break;
+    case KNOCKDOWN_S:
+      KNOCKDOWN();
+      break;
+    case REACTION_S:
+      REACTION();
+      break;
+    case DYING_S:
+      DYING();
+      break;
+    case DEAD_S:
+      DEAD();
+      break;
+   
+    }
+
+}
+void WarriorHandler::REACTION()
+{
+  if(the_char->GetBaseEntity()->getCur_Anim()->Done())
+    {
+     
+      BaseCharacter *target=the_char->GetTarget();
+      
+      if(the_char->AttackRoll(target))
+	the_char->DamageRoll(target);
+      
+      the_char->SetReactionDone(true);
+      state=STAND_S;
+    }
+}
+void WarriorHandler::CLEAVE()
+{
+  if(the_char->GetBaseEntity()->getCur_Anim()->Done())
+    {
+     
+      BaseCharacter *target=the_char->GetTarget();
+      //Cleave targets: switch dir and get the -1,0,+1;
+      
+      if(the_char->AttackRoll(target))
+	the_char->DamageRoll(target);
+      
+      state=STAND_S;
+    }
+  
+}
+void WarriorHandler::KNOCKDOWN()
+{
+
+  if(the_char->GetBaseEntity()->getCur_Anim()->Done())
+    {
+     
+      BaseCharacter *target=the_char->GetTarget();
+      //Cleave targets: switch dir and get the -1,0,+1;
+      
+      if(the_char->AttackRoll(target))
+	the_char->DamageRoll(target);
+      
+      state=STAND_S;
+    }
+  
+}

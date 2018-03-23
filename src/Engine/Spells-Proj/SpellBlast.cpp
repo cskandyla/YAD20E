@@ -1,0 +1,110 @@
+
+#include "SpellBlast.h"
+
+SpellBlast::SpellBlast(SpellInfo *spellinfo,BaseCharacter *caster,void (*Effect)(SpellStats *sp_stats),  AnimatedEntity *projectile_entity,AnimatedEntity *blast_entity):
+  Spell(spellinfo,caster,Effect),projectile_entity(projectile_entity)
+{
+  blast=new Blast(blast_entity);
+  projectile=NULL;
+
+}
+
+SpellBlast::SpellBlast(const SpellBlast &aspellblast):Spell(aspellblast)
+{
+  this->projectile=new Projectile(*aspellblast.projectile);
+  this->projectile_entity=new AnimatedEntity(*aspellblast.projectile_entity);
+  this->blast=new Blast(*aspellblast.blast);
+}
+
+SpellBlast::~SpellBlast()
+{
+  if(projectile)
+    delete projectile;
+  delete blast;
+  delete projectile_entity;
+}
+
+void SpellBlast::Update(float time)
+{
+
+  if(IsCast())
+    {
+      if(projectile)
+	{
+	  blast->SetPosition(projectile->getPosition().x,projectile->getPosition().y-projectile->getPosition().h/2);
+	  if(!projectile->Hit())
+	    {
+	      projectile->Update(time);
+	    }
+	  else if(!blast->Done())
+	    {
+	      blast->Update(time);
+	    }
+	  else
+	    {
+	      cout<<"Effect"<<endl;
+	      Effect(sp_stats);
+	      OnDone();
+	    }
+	}
+    }
+
+}
+
+void SpellBlast::Reset()
+{
+  
+  projectile->Reset();
+  projectile->Place(caster->GetBaseEntity()->getPosition(),caster->GetDirection());
+  projectile->SetUp();
+  projectile->MakeActive(true);
+  blast->Reset();
+  blast->MakeActive(true);
+}
+
+void SpellBlast::Draw(SDL_Texture *screen)
+{
+
+  if(projectile)
+    {
+      if(!projectile->Hit())
+	{
+	  projectile->Draw(screen);
+	}
+      else
+	{
+	  blast->Draw(screen);
+	}
+    }
+
+}
+
+void SpellBlast::OnCast()
+{
+  cout<<"OnCast"<<endl;
+  if(sp_stats)
+    {
+      int tile_size=MapIndex::Instance()->getMap()->getTileSize();
+      SDL_Rect target{(short)(sp_stats->GetTarget().first/tile_size*tile_size),(short)(sp_stats->GetTarget().second/tile_size*tile_size),60,60};
+      if(!projectile)
+	{
+	  projectile=new Projectile(projectile_entity,target,10);
+
+	}
+      else
+	{
+	  projectile->setTarget(target);
+	}
+
+	  Reset();
+    }
+}
+
+
+void SpellBlast::OnDone()
+{
+  cout<<"OnDone"<<endl;
+  SetCast(false);
+  projectile->MakeActive(false);
+  blast->MakeActive(false);
+}

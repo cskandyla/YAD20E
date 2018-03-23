@@ -1,0 +1,41 @@
+#ifndef __STATE_HANDLER__
+#define __STATE_HANDLER__
+#include "../../Entity/MovingEntity.h"
+#include <list>
+#include "../BasicCharacter.h"
+
+
+
+using std::list;
+
+
+
+
+//Default StateHandler for BaseCharacters
+
+class StateHandler
+{
+
+ private:
+  BaseCharacter *the_char;
+  enum STATE state;
+ public:
+  StateHandler(BaseCharacter *the_char,enum STATE starting);
+  void SetState(enum STATE state);
+  enum STATE GetState();
+  virtual void STAND();
+  virtual void ATTACK();
+  virtual void MOVE();
+  virtual void CAST();
+  virtual void DYING();
+  virtual void DEAD();
+  virtual void LOOP();
+  
+  
+};
+
+
+
+
+
+#endif

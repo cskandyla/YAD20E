@@ -1,0 +1,26 @@
+#include <SDL2/SDL.h>
+#include "AnimatedEntity.h"
+#ifndef __BLAST_H
+#define __BLAST_H
+
+
+class Blast
+{
+
+ private:
+  AnimatedEntity *animentity;
+  bool Active;
+ public:
+  Blast(AnimatedEntity *animentity);
+  Blast(const Blast &ablast);
+  virtual ~Blast();
+  void Update(float time);
+  void Draw(SDL_Texture *screen);
+  void MakeActive(bool Active);
+  void SetPosition(int x,int y);
+  bool Done();
+  void Reset();
+
+};
+
+#endif

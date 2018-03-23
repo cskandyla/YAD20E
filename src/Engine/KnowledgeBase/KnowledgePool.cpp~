@@ -1,0 +1,38 @@
+#include "KnowledgePool.h"
+KnowledgePool* KnowledgePool::k_pool=NULL;
+
+KnowledgePool::KnowledgePool()
+{
+  
+}
+KnowledgePool* KnowledgePool::Instance()
+{
+  if(!k_pool)
+    k_pool=new KnowledgePool();
+  return k_pool;
+}
+void KnowledgePool::Init()
+{
+  
+}
+
+void KnowledgePool::Free()
+{
+  for (std::unordered_map<string,Team*>::iterator it=teams.begin(); it!=teams.end(); ++it)
+    delete it->second;
+}
+
+
+void KnowledgePool::AddTeam(Team *team)
+{
+  teams[team->GetName()]=team;
+}
+
+Team* KnowledgePool::GetTeam(string team)
+{
+  if(teams.find(team)!=teams.end())
+    {
+      return teams[team];
+    }
+  return NULL;
+}
