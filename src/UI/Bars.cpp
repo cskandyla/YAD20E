@@ -10,11 +10,12 @@
 using  std::cout;
 using  std::endl;
 
-UI_Bars::UI_Bars(TurnEngine *t_e,Camera *camera,string path_move,string path_attack,string path_abilities,string path_items,string path_end):t_e(t_e),camera(camera)
+UI_Bars::UI_Bars(TurnEngine *t_e,Camera *camera,string path_move,string path_attack,string path_use,string path_abilities,string path_items,string path_end):t_e(t_e),camera(camera)
 {
-  basemenu=new ButtonMenu(O_RIGHT,SDL_Rect{0,64,0,0});
+  basemenu=new ButtonMenu(O_RIGHT,SDL_Rect{0,108,0,0});
   basemenu->Add("Move",path_move);
   basemenu->Add("Attack",path_attack);
+  basemenu->Add("Use",path_use);
   basemenu->Add("Abilities",path_abilities);
   basemenu->Add("Inventory",path_items);
   basemenu->Add("Close",path_end);
@@ -72,7 +73,7 @@ void UI_Bars::HandleEvents(SDL_Event *event)
 	    Button *button=basemenu->Clicked(pos.first,pos.second);
 	    if(button)
 	      {
-		HandleBaseMenu(button);
+		      HandleBaseMenu(button);
 	      }
 	    button=attack->Clicked(pos.first,pos.second);
 	    if(button)
@@ -97,9 +98,9 @@ void UI_Bars::HandleEvents(SDL_Event *event)
 
 void UI_Bars::HandleBaseMenu(Button *button)
 {
-  if(!t_e->GetTurn()->AIControlled())
+	if(t_e->GetTurn() && !t_e->GetTurn()->AIControlled())
     {
-      if(button->GetName()=="Close")
+	    if(button->GetName()=="Close")
 	{
 	  attack->Show(false);
 	  abilities->Show(false);
@@ -112,7 +113,7 @@ void UI_Bars::HandleBaseMenu(Button *button)
 	  attack->Show(false);
 	  abilities->Show(false);
 	  items->Show(false);
-	  if (!(t_e->GetTurn()->StandardActionDone() && t_e->GetTurn()->HasMoved()))
+	  if (t_e->GetTurn() &&  !(t_e->GetTurn()->StandardActionDone() && t_e->GetTurn()->HasMoved()))
 	    t_e->GetTurn()->GetUserInputHandler()->SetState(new MoveState(t_e->GetTurn()));
 	}
       else if(button->GetName()=="Abilities")
@@ -124,7 +125,7 @@ void UI_Bars::HandleBaseMenu(Button *button)
 	}
       else if(button->GetName()=="Attack")
 	{
-	  if (!t_e->GetTurn()->StandardActionDone())
+		if (t_e->GetTurn() && !t_e->GetTurn()->StandardActionDone())
 	    t_e->GetTurn()->GetUserInputHandler()->SetState(new AttackState(t_e->GetTurn()));
 	}
       else if(button->GetName()=="Inventory")
@@ -135,25 +136,47 @@ void UI_Bars::HandleBaseMenu(Button *button)
 	  items->Show(true);
 	  CheckItems();
 	}
+      else if(button->GetName()=="Use")
+      {
+	      attack->Show(false);
+	      abilities->Show(false);
+	      items->Show(false);
+	      if (t_e->GetTurn() && !t_e->GetTurn()->StandardActionDone())
+	      {
+		      cout<<"Use Action Menu"<<endl;
+		      t_e->GetTurn()->GetUserInputHandler()->SetState(new UseState(t_e->GetTurn()));
+	      }
+      }
     }
 }
 
 void UI_Bars::HandleAttackMenu(Button *button)
 {
-  if (!t_e->GetTurn()->StandardActionDone())
+	if (t_e->GetTurn() && !t_e->GetTurn()->StandardActionDone())
     t_e->GetTurn()->GetUserInputHandler()->SetState(new AttackState(t_e->GetTurn()));
    
 }
 void UI_Bars::HandleAbilitiesMenu(Button *button)
 {
-  //Virtual Mage Bars
-  if (!t_e->GetTurn()->StandardActionDone())
-    SpellCast(button);
+
+	
+/*
+if(spell_list->Shown())
+{
+	BuildSpellMenu();
+	//Update our spells
+	spell_interface->UpdatePreparedSpells();
+}
+
+bool sp_shown=spell_list->Shown();
+sp_shown=!sp_shown;
+spell_list->Show(sp_shown);
+*/		  
 }
 void UI_Bars::HandleItemMenu(Button *button)
 {
   cout<<"Item MENU"<<endl;
-  if (!t_e->GetTurn()->StandardActionDone())
+  if (t_e->GetTurn()  && !t_e->GetTurn()->StandardActionDone())
     UseItem(button);
 }
 
@@ -181,6 +204,8 @@ void UI_Bars::Draw(SDL_Texture *screen)
 
 void UI_Bars::CheckItems()
 {
+	if(!t_e->GetTurn())
+		return;
   items->Clear();
   BaseCharacter *chara=t_e->GetTurn()->TheCharacter();
   vector<Item*> c_items=chara->getInventory();
@@ -195,12 +220,14 @@ void UI_Bars::CheckItems()
 
 void UI_Bars::SpellCast(Button *button)
 {
+	if(t_e->GetTurn())
   t_e->GetTurn()->GetUserInputHandler()->SetState(new SpellState(t_e->GetTurn(),button->GetName()));
 }
 
 
 void UI_Bars::UseItem(Button *button)
 {
+	if(t_e->GetTurn())
   t_e->GetTurn()->GetUserInputHandler()->SetState(new ItemState(t_e->GetTurn(),button->GetName()));
 }
 
@@ -222,4 +249,5 @@ ButtonMenu* UI_Bars::GetMenu(MENU_T menu)
     {
       return  items;
     }
+  return NULL;
 }

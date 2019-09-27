@@ -1,0 +1,28 @@
+<Spell>
+  <Info>
+    <Name>Arcane Blast</Name>
+    <Class>Mage</Class>
+    <School>Evocation</School>
+    <Description>A Blast of arcane energy.</Description>    
+  </Info>
+
+
+
+  <Icon>Resources/Spells/Arcane_Blast/arcaneblast-icon1.png</Icon>
+  <Stats>
+    <Range>16</Range>
+    <Radius>0</Radius>
+    <Rank>1</Rank>
+    <Level>0</Level>
+    <AOE>SINGLE</AOE>
+  </Stats>
+
+<EffectName>ArcaneBlastEffect</EffectName>
+
+  <Entity>
+    <Sprite>Resources/Spells/Arcane_Blast/arcane-blast.png</Sprite>
+    <Width>32</Width>
+    <Height>32</Height>
+    <Animfile>Resources/Spells/Arcane_Blast/arcane-blast.anim</Animfile>
+  </Entity>
+</Spell>

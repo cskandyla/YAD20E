@@ -42,6 +42,35 @@ AttackState::AttackState(Turn *the_turn):InputState(the_turn)
   aoe_tiles.push_back(pair<int,int>(0,0));
 }
 
+UseState::UseState(Turn *the_turn):InputState(the_turn)
+{
+	  BaseCharacter *bchar=the_turn->TheCharacter();
+	  int tile_size=MapIndex::Instance()->getMap()->getTileSize();
+	tiles=MapIndex::Instance()->getTilesInRange(bchar->getPosition().x/tile_size,bchar->getPosition().y/tile_size,1,false);
+	    aoe_tiles.push_back(pair<int,int>(0,0));
+}
+
+void UseState::Execute(pair<int,int> pos)
+{
+
+	 if(!the_turn->StandardActionDone())
+	 {
+		  int tile_size=MapIndex::Instance()->getMap()->getTileSize();
+		  CellInfo *cellInfo=MapIndex::Instance()->getCell(pos.second/tile_size,pos.first/tile_size);
+		
+		 if(cellInfo)
+		 {
+			 if(cellInfo->getType()==DOODAD_T)
+			 {
+				 MapIndex::Instance()->getDoodad(cellInfo->getID())->Trigger();
+			 }
+		 }
+		 
+	 }
+	 Done=true;
+}
+
+
 void AttackState::Execute(pair<int,int> pos)
 {
   
@@ -74,6 +103,8 @@ void AttackState::Execute(pair<int,int> pos)
 }
 
 
+
+
 MoveState::MoveState(Turn *the_turn):InputState(the_turn)
 {
   BaseCharacter *bchar=the_turn->TheCharacter();
@@ -84,6 +115,10 @@ MoveState::MoveState(Turn *the_turn):InputState(the_turn)
     aoe_tiles.push_back(pair<int,int>(0,0));
   } 
 }
+
+
+
+
 
 void MoveState::Execute(pair<int,int> pos)
 {
@@ -181,7 +216,7 @@ void SpellState::BuildAoeTiles()
 		}
 	      else if(the_spell->GetSpellStats()->GetDirection()==S_RIGHT)
 		{
-		  aoe_tiles.push_back(pair<int,int>(-i,0));
+		  aoe_tiles.push_back(pair<int,int>(i,0));
 		}
 	      else if(the_spell->GetSpellStats()->GetDirection()==S_UP)
 		{

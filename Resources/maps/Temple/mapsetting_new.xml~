@@ -1,0 +1,25 @@
+<mapsetting>
+	<intro>Resources/Docs/demo_intro</intro>
+	<outro>Resources/Docs/demo_outro</outro>
+	<visibility>20</visibility>
+	<Teams>
+		<Team>
+			<Name>Temple Guards</Name>
+			<Member>
+				<character>Resources/Characters/Birmwin64/birmwin64.xml</character>
+				<AI>Zombie</AI>
+				<Location>5,6</Location>
+			</Member>		
+		</Team>
+	</Teams>
+
+	<Quest>		</Quest>
+
+	<Dialogs>
+		<Dialog>
+			<LChar></LChar>
+			<RChar></RChar>
+			<file></file>
+		</Dialog>
+	</Dialogs>
+</mapsetting>

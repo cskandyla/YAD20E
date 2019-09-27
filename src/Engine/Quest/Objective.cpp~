@@ -1,0 +1,25 @@
+#include "Objective.h"
+
+
+Objective::Objective(string name,bool (*success_condition)())
+{
+	this->name=name;
+	this->success_condition=success_condition;
+}
+
+Objective::~Objective()
+{
+}
+
+
+bool Objective::success()
+{
+	return this->success_condition();
+}
+
+
+string Objective::getName()
+{
+	return this->name;
+}
+

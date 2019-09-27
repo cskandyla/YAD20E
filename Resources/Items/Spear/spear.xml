@@ -1,0 +1,35 @@
+<Item >
+
+<type>Weapon</type>
+
+<Info>
+<Name>Spear</Name>
+<Description>Just a simple spear</Description>
+<Slot>MainWeapon</Slot>
+<Type>Weapon</Type>
+<Range>1</Range>
+<Damage>8</Damage>
+<ToHitBonus>0</ToHitBonus>
+<DamageBonus>0</DamageBonus>
+<BaseDamageType>Piercing</BaseDamageType>
+<WeaponType>Spear</WeaponType>
+</Info>
+
+<Stats>
+<Int>0</Int>
+<Dex>0</Dex>
+<Str>0</Str>
+<Con>0</Con>
+</Stats>
+
+
+<Image>Resources/Items/Spear/upg_spear.png</Image>
+
+<Entity>
+<Sprite>Resources/Items/Spear/spear.bmp</Sprite>
+<Width>60</Width>
+<Height>60</Height>
+<Animfile>Resources/Items/Spear/spear.anim</Animfile>
+</Entity>
+
+</Item>

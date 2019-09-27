@@ -1,0 +1,60 @@
+#+OPTIONS: toc:nil
+#+OPTIONS: num:nil
+
+* Cellars 'n' Cantrips Pre-Alpha v0.01 Demo
+** Act1: Introduction
+You have recently arrived in the town of Rifthaven, filled with wonderlust, seeking a sense of purpose.
+Over the first few days, nothing has been happening around town. Suddenly, yesterday, you heard a commotion
+in the town center. While having your customary drink in the serpent's piss, the local tavern, you overheard some 
+of the patrons discussing livestock and children of some of the farmers in the east end of town having been taken
+by goblins. The next day you finally find a reward message in the town's message board: "Adventurers wanted!
+Goblins have been ransacking the eastern farms, help eliminate the menace. Reward: 150 gold pieces for the
+leader's head and 25 gold pieces for each rescued child or cattle. For more information please contact the mayor.
+Act soon, lives are in danger!"  
+
+** Act2: The town
+Rifthaven is a small town, with a mostly citizen militia for its protection. 
+The mayor Frank Baumeister is the most wealthy and prominent member of the community, 
+with other notable members including, the blacksmith Sven Karlsson, the local alchemist Barlinda
+and the  militia captain, Rufus.
+*** The mayor
+Frank is a well spoken and traveled man, which is apparent by his apparel and stature.
+He promises you the reward for the head of Gronkk(the goblin leader) and 25 gold pieces for each child or 
+cattle that returns alive. If pressed he even adds 100 gold pieces of his own if all children are returned
+safely.
+
+*** Blacksmith
+The blacksmith can sell basic weapons and armor, but nothing too fancy.
+Any item costing 200 or less gold is available. 
+That includes, leather armor and bows he has acquired from a traveling salesman a few weeks ago.
+
+
+*** Alchemist
+Barlinda can offer the hero(es) potions of healing and antidotes at a nominal fee, unfortunately,
+she has not had enough time to prepare for such an event and the stocks are limited.
+
+*** Militia
+Rufus the local captain of the militia, an ex mercenary would love to be able to deal with the goblin menace.
+The militia however is stretched very thin only consisting of a few young volunteers since the war with
+the serpent empire took both the town's guard and best fighters away. He tells you that the goblins 
+have probably occupied the old citadel used by the empire before its fall on the hills to the far east of town.
+
+** Act3: The old citadel on the hills
+Following up on the rumors you arrive at the entrance of the citadel. Almost immediately, you hear screams and
+soon thereafter see a few goblins scurrying to block your entry. Time to test your steel!
+
+*** Quest 0: The Goblin Menace
+*** Slay Gronkk
+*** Free the children
+*** Save the cattle
+*** Kill all goblins
+
+
+** Act4: Ending
+With Gronkk and his goblins slain and the children and cattle safe the goblin menace is no more.
+They mayor throws a feast in your name and hands you the key to the city. 
+There might be hope for the people of the fallen empire after all!
+You can not help but wonder however what pushed the goblins to be so aggressive and careless. 
+How long can Rifthaven and the fallen empire endure with no organized government to protect and aid 
+in a time of need ?
+

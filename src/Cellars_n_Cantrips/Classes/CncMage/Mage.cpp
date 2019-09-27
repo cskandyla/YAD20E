@@ -89,6 +89,7 @@ void Mage::ArcaneMastery()
 
 bool Mage::Reaction(BaseCharacter *ent)
 {
+	return false;
   /*
   cout<<"Mage Reaction"<<endl;
    the_spell=NULL;

@@ -30,7 +30,7 @@ void GameRenderer::ShowCursor(SDL_Texture *screen,Turn *the_turn)
   if(translated_pos.first>=0 && translated_pos.second>=0 &&
      translated_pos.first<themap->getWidth()*themap->getTileSize() && translated_pos.second<themap->getHeight()*themap->getTileSize())
     {
-      if(the_turn->GetUserInputHandler() && the_turn->GetUserInputHandler()->GetState())
+      if(the_turn && the_turn->GetUserInputHandler() && the_turn->GetUserInputHandler()->GetState())
 	{
 	  vector<pair<int,int>> target_tiles=the_turn->GetUserInputHandler()->GetState()->GetAoeTiles();
 	  for(int i=0;i<target_tiles.size();i++)
@@ -45,6 +45,9 @@ void GameRenderer::ShowCursor(SDL_Texture *screen,Turn *the_turn)
 void GameRenderer::Draw(SDL_Rect center,SDL_Texture *screen,Turn *the_turn)
 {
 
+	
+	
+	
   //if we're not moving the camera we dont need to redraw the map so... maybe dont ?
   Map *themap=MapIndex::Instance()->getMap();
   int tile_size=themap->getTileSize();
@@ -78,7 +81,7 @@ void GameRenderer::Draw(SDL_Rect center,SDL_Texture *screen,Turn *the_turn)
 	    if(themap->getLayerstoShow()==SALL || themap->getLayerstoShow()==SOBJECT || themap->getLayerstoShow()==SVISIBLE)
 	      {
 		//dont draw the blank tile :) -- make sure our mapeditor allways passes the blank tile as 0
-		if(themap->getTile(j,i,LOBJECT)->getID()!=0)
+		if(themap->getTile(j,i,LOBJECT)->getID()!=19)
 		  BaseRenderer::Instance()->Render(themap->GetSurface(j,i,LOBJECT),&pos);
 	      }
 	    if(themap->getLayerstoShow()==SALL || themap->getLayerstoShow()==SCOLISION)
@@ -95,7 +98,7 @@ void GameRenderer::Draw(SDL_Rect center,SDL_Texture *screen,Turn *the_turn)
 
     
   //Show Targeted Tile and the available moves/aoe indicator 
-  if(the_turn->GetUserInputHandler() && the_turn->GetUserInputHandler()->GetState())
+  if(the_turn && the_turn->GetUserInputHandler() && the_turn->GetUserInputHandler()->GetState())
     {
       vector<pair<int,int> > available_tiles=the_turn->GetUserInputHandler()->GetState()->GetTiles();
       for(int i=0;i<available_tiles.size();i++)
@@ -124,7 +127,18 @@ void GameRenderer::Draw(SDL_Rect center,SDL_Texture *screen,Turn *the_turn)
     
   //Dynamic Map find a way to handle	
   DrawDynamicEntities(starti,startj,screen);
-    
+  //if there is an active spell draw it
+
+  
+  if(the_turn && dynamic_cast<Caster*>(the_turn->TheCharacter()))
+  {
+	  Spell *the_spell=((Caster*)the_turn->TheCharacter())->GetSpell();
+	  if(the_spell)
+	  {
+		  the_spell->Draw(screen);
+	  }
+  }
+  
 }
 
 
@@ -189,13 +203,17 @@ void GameRenderer::DrawDynamicEntities(int starti,int startj,SDL_Texture *screen
 	}
       else if(dyn_elements[i].GetObjectType()==D_ITEM)
 	{
-	  ((VisibleItem*)dyn_elements[i].GetObject())->Draw(screen);
+	  cout<<"ITEM:"<<dyn_elements[i].GetObject()<<endl;
+	      //((VisibleItem*)dyn_elements[i].GetObject())->Draw(screen);
+	      ((Item*)dyn_elements[i].GetObject())->Show(screen);
 	}
       else if(dyn_elements[i].GetObjectType()==D_WALLSPELL)
 	{
 	  ((WallSpell*)dyn_elements[i].GetObject())->Draw(screen);
 	}
     }
+
+
 }
 
 

@@ -1,5 +1,6 @@
 #include <lua.hpp>
-
+#include <string>
+using std::string;
 
 //Simplest Possible implementation cattering for 'non-engine' programmers some
 //metatable magic in the Character and item to simulate OO Behaviour generally
@@ -25,7 +26,7 @@ class Lua_Export_Manager
 
 //Register EVERYTHING
 void lua_register_everything(lua_State *l);
-
+void lua_list_commands();
 //GLOBALS
 int ListCharacters(lua_State *l);
 int ListItems(lua_State *l);
@@ -58,7 +59,10 @@ int character_equip(lua_State *l);//Actual Item object
 int character_addinventory(lua_State *l);// Actual Item object
 int character_move(lua_State *l);// absolute position
 int character_info(lua_State *l);
-int character_set_ai(lua_State *l);//might be a tad hard
+int character_set_ai(lua_State *l);
+int character_get_state(lua_State *l);
+int character_get_id(lua_State *l);
+int character_get_name(lua_State *l);
 void lua_register_character(lua_State *l);
 
 //Item
@@ -75,5 +79,10 @@ int doodad_get(lua_State *l);//by ID
 int doodad_place(lua_State *l);// in tiles
 int doodad_trigger(lua_State *l);
 int doodad_info(lua_State *l);
-int doodad_trigger(lua_State *l);// what happens when you click it i.e. quest end
+int doodad_get_state(lua_State *l);
 void lua_register_doodad(lua_State *l);
+
+
+
+//Objectives
+bool lua_objective_function(lua_State *l,string name);

@@ -644,7 +644,7 @@ Tile* Map::getTile(int x,int y,TILEMAP_LAYER tl)
       return CollisionTiles[x][y];
     }
 
-
+  return NULL;
 }
 
 
@@ -671,6 +671,6 @@ SDL_Texture* Map::GetSurface(int x,int y,TILEMAP_LAYER tl)
       return ColisionSurfaces[CollisionTiles[x][y]->getID()].second;
     }
 
-
+  return NULL;
 
 }

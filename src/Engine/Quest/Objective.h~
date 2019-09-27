@@ -1,0 +1,24 @@
+#include <string>
+using std::string;
+
+
+#ifndef __OBJECTIVE__H__
+#define __OBJECTIVE__H__
+
+
+typedef bool (*SuccessCondition)();
+class Objective
+{
+
+private:
+	string name;
+	bool (*success_condition)();
+
+public:
+	Objective(string name,bool (*success_condition)());
+	~Objective();
+	bool success();
+	string getName();
+};
+
+#endif

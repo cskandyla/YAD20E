@@ -1,0 +1,40 @@
+<?xml version="1.0"?>
+<Character>
+	<Info>
+		<Name>Modnar</Name>
+		<Class>Mage</Class>
+		<Race>Dwarf</Race>
+		<Gender>Male</Gender>
+	</Info>
+	<Attributes>
+		<Int>16</Int>
+		<Dex>16</Dex>
+		<Str>11</Str>
+		<Con>12</Con>
+		<Spi>9</Spi>
+	</Attributes>
+	<GeneralStats>
+		<Hp>9</Hp>
+		<Sp>6</Sp>
+		<Xp>0</Xp>
+	</GeneralStats>
+	<Entity>
+		<Sprite>Resources/Characters/Modnar/base.png</Sprite>
+		<Width>64</Width>
+		<Height>64</Height>
+		<Animfile>Resources/Characters/Modnar/baseanim.anim</Animfile>
+	</Entity>
+	<Equiped>
+		<head />
+		<chest>Resources/Items/Robes64/robes.xml</chest>
+		<legs />
+		<neck />
+		<hand1 />
+		<hand2 />
+		<mainHand>Resources/Items/Wand64/wand.xml</mainHand>
+		<secondaryHand />
+		<ammo />
+	</Equiped>
+	<Items />
+</Character>
+

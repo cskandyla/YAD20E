@@ -1,0 +1,35 @@
+#include "Quests.h"
+#include "KnowledgePool.h"
+#include "Team.h"
+#include "BuiltinObjective.h"
+#include "Quest.h"
+
+
+bool all_goblins_killed()
+{
+	set<unsigned int> goblinz=KnowledgePool::Instance()->GetTeam("Goblinz")->GetMembers();
+        set<unsigned int>::iterator goblin_it;
+	for(goblin_it=goblinz.begin();goblin_it!=goblinz.end();++goblin_it)
+	{
+		if(KnowledgePool::Instance()->getCharacter(*goblin_it)->getState()!=STATE_DEAD)
+		{
+			return false;
+		}
+	}
+
+	return true;
+}
+
+
+bool always_succeed()
+{
+	return true;
+}
+
+void DemoKillGoblins()
+{
+	Quest *goblin_genocide= new Quest("Goblin Extermniation");		
+	BuiltinObjective *kill_goblins= new BuiltinObjective("All goblins killed",always_succeed);
+	goblin_genocide->addObjective(kill_goblins);
+	
+}

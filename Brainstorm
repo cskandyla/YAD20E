@@ -1,18 +1,16 @@
 FIXES:
-	Renderer:Fix layers in renderer(spells and walls)
-	Design:Allow Walls on Ocuppied?
-	SpellEffects:Wall not cleaning up correctly
-	Rendeder/MapIndex:VisibilityBug(near objects that block vision but are not walls)
-	Pathing Computation(compute actual path)[maybe pre-compute]
-	MapIndexing and doodads(Add another level?)[can also be used for destructibles]
+	Renderer:Fix layers in renderer(spells and walls): partial
+	Design:Allow Walls on Ocuppied? : not done
+	SpellEffects:Wall not cleaning up correctly : not done
+	Pathing Computation(compute actual path)[maybe pre-compute] :not done
+	Spells with a timer should not show on not visible areas(might reqiuire intersection test or to make all spells multiples of tile size) : nt done
 
 ADD:
-	AI:Dynamically Set Targets
-	UI:Use button in interface
-	UI:Maybe some kind of class based background?
-	UI:Log Toggle?
-	LUA:Dynamically Set AI
-	LUA/GameEngine:Dynamically Change Map
+	UI:Use button in interface : partial
+	UI:Maybe some kind of class based background? : partial
+	UI:Log Toggle? : not sure it's necessary
+	LUA/GameEngine:Dynamically Change Map : Neeeds Realm implementation
+	GameEngine: Multi-tile entities/doodads (mapindexing should return all tiles that are associcated with the current entity/doodad) : not done
 	
 	
 

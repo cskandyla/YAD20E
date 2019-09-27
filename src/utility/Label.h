@@ -9,13 +9,15 @@ using std::pair;
 
 class SimpleLabel
 {
- private:
-  string label_text;
-  SDL_Surface *label_surf;
- public:
-  SimpleLabel(string label_text,TTF_Font *font);
-  virtual ~SimpleLabel();
-  void Draw(int x,int y,SDL_Surface *screen);
+private:
+	string label_text;
+	SDL_Texture *background;
+	TTF_Font *font;
+public:
+	SimpleLabel(string label_text,TTF_Font *font);
+	virtual ~SimpleLabel();
+	void Draw(int x,int y,SDL_Texture *screen);
+	void Update(string new_text);
 };
 
 #endif

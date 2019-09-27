@@ -1,0 +1,35 @@
+<Item >
+
+<type>Weapon</type>
+
+<Info>
+<Name>Wand</Name>
+<Description>Just a simple wand</Description>
+<Slot>MainWeapon</Slot>
+<Type>Weapon</Type>
+<Range>6</Range>
+<Damage>6</Damage>
+<ToHitBonus>0</ToHitBonus>
+<DamageBonus>0</DamageBonus>
+<BaseDamageType>Force</BaseDamageType>
+<WeaponType>Secondary</WeaponType>
+</Info>
+
+<Stats>
+<Int>0</Int>
+<Dex>0</Dex>
+<Str>0</Str>
+<Con>0</Con>
+</Stats>
+
+
+<Image>Resources/Items/Wand/wand.bmp</Image>
+
+<Entity>
+<Sprite>Resources/Items/Wand/wandsprite.bmp</Sprite>
+<Width>60</Width>
+<Height>60</Height>
+<Animfile>Resources/Items/Wand/wand.anim</Animfile>
+</Entity>
+
+</Item>

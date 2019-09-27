@@ -1,6 +1,8 @@
 // screen resolution
-#define SCREEN_WIDTH 1200
-#define SCREEN_HEIGHT 900
+#define SCREEN_WIDTH 1920
+#define SCREEN_HEIGHT 1080
+//#define SCREEN_WIDTH 1280
+//#define SCREEN_HEIGHT 960
 //map parameters
 #define TILE_SIZE 30
 #define SCROLL_SPEED 10

@@ -13,6 +13,7 @@ class TurnEngine;
 class UI_Bars
 {
 private:
+
 ButtonMenu *basemenu;
 //  OptionsMenu optionsmenu;//Spells/Fighter --wuteva--/
 ButtonMenu *attack,*abilities,*items;
@@ -21,7 +22,7 @@ Camera *camera;
 
 public:
 //Constructor
- UI_Bars(TurnEngine *t_e,Camera *camera,string path_move,string path_attack,string path_abilities,string path_items,string path_end);
+	UI_Bars(TurnEngine *t_e,Camera *camera,string path_move,string path_attack,string path_use,string path_abilities,string path_items,string path_end);
  virtual ~UI_Bars();
  //Add/Remove Menu Elements
  void Add(MENU_T menu,Button* button);

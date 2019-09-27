@@ -1,0 +1,33 @@
+<Spell>
+  <Info>
+    <Name>Flash Fire</Name>
+    <Class>Mage</Class>
+    <School>Evocation</School>
+    <Description>Flash Fire Description.</Description>
+  </Info>
+
+  <Stats>
+    <Range>4</Range>
+    <Radius>0</Radius>
+    <Rank>1</Rank>
+    <Level>2</Level>
+    <AOE>DISK</AOE>
+  </Stats>
+
+  <EffectName>FlashFireEffect</EffectName>
+  <Icon>Resources/Spells/FlashFire/flashfire-icon.png</Icon>    
+  <Entity>
+    <Sprite>Resources/Spells/Blank/Blank.png</Sprite>
+    <Width>32</Width>
+    <Height>32</Height>
+    <Animfile>Resources/Spells/Blank/Blank.anim</Animfile>
+  </Entity>
+
+
+  <Blast>
+    <Sprite>Resources/Spells/FlashFire/flashfire_small.png</Sprite>
+    <Width>64</Width>
+    <Height>64</Height>
+    <Animfile>Resources/Spells/FlashFire/flashfire_small.anim</Animfile>
+  </Blast>
+</Spell>

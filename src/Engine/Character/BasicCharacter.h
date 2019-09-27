@@ -63,7 +63,6 @@ private:
   //STATE HANDLER
   CharacterHandler* stateHandler;
 public:
-    
   //CTORS
   BaseCharacter(AnimatedEntity *base,Info *myinfo, Attributes *BaseAttributes,GeneralStats *generalStats,CombatStats *combatStats);
   //if we need to overload the statehandler pass whichever handler we want
@@ -127,7 +126,7 @@ public:
 
   //ACTIONS
   virtual void Move(list<DIRECTION> path);//Plan path using map
-  virtual bool Attack(BaseCharacter *ent);//empty overide in impementation
+  virtual bool Attack(BaseCharacter *ent);//empty overide in implementation
   virtual void Ability();//empty overide in implementation
   virtual bool Reaction(BaseCharacter *ent);//empty overide in implementation
     
@@ -207,8 +206,7 @@ public:
     
 
 
-  //TEMP
-    
+  //TEMP Probably remove later and map to (ranged) weapon    
   void SetProjectile(Projectile *proj);
   Projectile* getProjectile();
 
@@ -229,7 +227,6 @@ public:
   //Target
   void SetTarget(BaseCharacter *target);
   BaseCharacter* GetTarget();
-    
 
 };
 #endif // __BASICCHARACTER

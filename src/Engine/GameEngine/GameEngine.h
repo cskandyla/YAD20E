@@ -17,6 +17,7 @@ using std::string;
 #include "SpellBlast.h"
 #include "TargetSpell.h"
 #include <pugixml.hpp>
+#include <lua.hpp>
 using namespace pugi;
 
 
@@ -25,18 +26,19 @@ using namespace pugi;
 class Camera;
 class GameEngine
 {
- private:
-  Camera *camera;
-  SDL_Texture *Game_Texture;
-  SDL_Rect *Game_Surface_Rect;
-  TurnEngine *TE;
-  Map *the_map;
-  BaseCharacter* the_char;
-  GameRenderer *g_renderer;
-  unordered_map<unsigned int,AIEntity*> AI;//AIHandler Class?
+private:
+	Camera *camera;
+	SDL_Texture *Game_Texture;
+	SDL_Rect *Game_Surface_Rect;
+	TurnEngine *TE;
+	Map *the_map;
+	BaseCharacter* the_char;
+	GameRenderer *g_renderer;
+	lua_State *l;
+//  unordered_map<unsigned int,AIEntity*> AI;//AIHandler Class?
 
  public:
-  GameEngine();
+  GameEngine(lua_State *l);
   virtual ~GameEngine();
   void DummyInit(/*STUFF HERE*/);
   bool Init(string XMLFile, SDL_Rect *GameScreenSurface);

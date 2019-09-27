@@ -3,6 +3,7 @@
 #include "MapIndex.h"
 #include "CharacterHandler.h"
 #include "Caster.h"
+#include "KnowledgePool.h"
 
 CharacterState::CharacterState(CharacterHandler *s_handler):s_handler(s_handler)
 {
@@ -41,14 +42,15 @@ void CharacterMove::Execute()
 	{
 	  if(path->empty())
 	    {
-	      
-	      MapIndex::Instance()->ComputeVision(the_char->getPosition());
+		    if(the_char==KnowledgePool::Instance()->getCharacter(1)) 
+			    MapIndex::Instance()->ComputeVision(the_char->getPosition());
 	      MapIndex::Instance()->CharIndexUpdate(the_char,0,0);
 	      s_handler->SetState(STATE_STAND);	      
 	    }
 	  else if(!path->empty())
 	    {
-	      MapIndex::Instance()->ComputeVision(the_char->getPosition());
+		    if(the_char==KnowledgePool::Instance()->getCharacter(1)) 
+			    MapIndex::Instance()->ComputeVision(the_char->getPosition());
 	      the_char->Walk(path->front());
 	      path->pop_front();
 	    }

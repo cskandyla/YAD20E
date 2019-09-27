@@ -13,7 +13,12 @@ BaseRenderer::BaseRenderer()
 
 bool BaseRenderer::Init(SDL_Renderer *renderer)
 {
-  this->renderer=renderer;
+	if(renderer)
+	{
+		this->renderer=renderer;
+		return true;
+	}
+	return false;
 }
 void BaseRenderer::Free()
 {
@@ -55,10 +60,11 @@ SDL_Texture* BaseRenderer::LoadImage(string textureimage)
 void BaseRenderer::RenderTexture(SDL_Texture *srctexture,SDL_Texture *tgttexture,SDL_Rect *srcrect,SDL_Rect *tgtrect)
 {
   //SDL_RenderClear(renderer);
-  SDL_SetRenderTarget(renderer,tgttexture);
-  SDL_RenderCopy(renderer,srctexture,srcrect,tgtrect);
-  SDL_SetRenderTarget(renderer,NULL);
+	SDL_SetRenderTarget(renderer,tgttexture);
+	SDL_RenderCopy(renderer,srctexture,srcrect,tgtrect);
+	SDL_SetRenderTarget(renderer,NULL);
 }
+
 
 void BaseRenderer::Render(SDL_Texture *tex,SDL_Rect *tgtrect)
 {

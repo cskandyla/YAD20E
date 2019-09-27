@@ -5,12 +5,26 @@
 #include "BaseRenderer.h"
 #include <iostream>
 
+
+#include "BuiltinObjective.h"
+
+#include "Quests.h"
+
+
+//#ifdef LUA_SUPPORT
+#include "LuaObjective.h"
+#include "Lua_Export.h"
+//#endif
+
 using std::cout;
 using std::endl;
 
 
-GameEngine::GameEngine()
+GameEngine::GameEngine(lua_State *l):l(l)
 {
+	cout<<"lua state:"<<l<<endl;
+	lua_register_everything(this->l);
+	cout<<"lua state:"<<l<<endl;
 }
 
 GameEngine::~GameEngine()
@@ -18,11 +32,8 @@ GameEngine::~GameEngine()
 
   delete camera;
   delete TE;
-  unordered_map<unsigned int,AIEntity*>::iterator ai_it;
-  for(ai_it=AI.begin();ai_it!=AI.end();++ai_it)
-    {
-      delete ai_it->second;
-    }
+
+  
   cout<<"Deallocating the index"<<endl;
   MapIndex::Instance()->Free();
   KnowledgePool::Instance()->Free();
@@ -36,7 +47,8 @@ GameEngine::~GameEngine()
 
 bool GameEngine::Init(string XMLFile, SDL_Rect *GameScreenSurface)
 {
-
+	//
+cout<<"lua state:"<<l<<endl;
   string map,mapsetting;
   XmlBuilder::ParseInit(XMLFile,map,mapsetting);
   
@@ -60,7 +72,6 @@ bool GameEngine::Init(string XMLFile, SDL_Rect *GameScreenSurface)
   
   //MAPINDEX
   MapIndex::Instance()->Init(the_map);
-  //Our Team
   XmlBuilder::LoadTeams(XMLFile);
 
   int visibility=0;
@@ -70,12 +81,18 @@ bool GameEngine::Init(string XMLFile, SDL_Rect *GameScreenSurface)
   //RENDERER
   g_renderer=new GameRenderer(visibility,camera);
   //MAIN CHARACTER
-  the_char=KnowledgePool::Instance()->getCharacter(1);
+   the_char=KnowledgePool::Instance()->getCharacter(1);
   //VISION
   MapIndex::Instance()->ComputeVision(the_char->getPosition());
+  cout<<"lua state:"<<l<<endl;
+  luaL_dofile(l,"Resources/init.lua");
+  cout<<"lua state:"<<l<<endl;
+  Quest *loaded_quest=XmlBuilder::LoadQuest(mapsetting,l);
+  //TODO Realm, group the Map, Characters and Quest in one compact Realm, to clean up turn engine and optimizations
 
+  
   //TURN ENGINE
-  TE=new TurnEngine(camera);
+  TE=new TurnEngine(camera,loaded_quest);
   return true;
 }
 
@@ -91,7 +108,6 @@ void GameEngine::Draw(SDL_Texture *maintexture)
   window.w=(Game_Surface_Rect->w>camera->GetCam()->w)?camera->GetCam()->w:Game_Surface_Rect->w;
   window.h=(Game_Surface_Rect->h>camera->GetCam()->h)?camera->GetCam()->h:Game_Surface_Rect->h;
    
- 
   BaseRenderer::Instance()->RenderTexture(Game_Texture,maintexture,getViewpoint(),&window);
 }
 
@@ -120,6 +136,7 @@ void GameEngine::Update(float time)
 
 void GameEngine::Handle_Events(SDL_Event *event)
 {
+ 
   TE->Handle_Events(event);
 }
 

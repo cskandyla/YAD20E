@@ -15,7 +15,7 @@ Projectile::Projectile(AnimatedEntity* animentity, SDL_Rect target,int velocity)
     directiony=0;
     this->HasHitTarget=false;
     this->Active=false;
-    animentity->setAnimLoop(YES);
+    animentity->setAnimLoop(NO);
     theta=0;
     this->target=target;
     SetUp();
@@ -91,6 +91,7 @@ void Projectile::Update(float time)
 	    //cout<<"Hit Target"<<endl;
 	    
 	  }
+	animentity->Update(time);
     }
 
 }

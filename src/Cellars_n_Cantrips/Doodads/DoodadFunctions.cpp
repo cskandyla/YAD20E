@@ -40,7 +40,7 @@ void DoorClose(Doodad *doodad)
   int tile_size=MapIndex::Instance()->getMap()->getTileSize();
   int xpos=doodad->GetEntity()->getPosition().x/tile_size;
   int ypos=doodad->GetEntity()->getPosition().y/tile_size;
-  MapIndex::Instance()->getMap()->Set(xpos,ypos,1,LCOLISION);
+  MapIndex::Instance()->getMap()->Set(xpos,ypos,doodad->getVisibility(),LCOLISION);
   //Switch to current if we ever get into a multicharacter scenario÷
   MapIndex::Instance()->ComputeVision(KnowledgePool::Instance()->getCharacter(1)->getPosition());
 }

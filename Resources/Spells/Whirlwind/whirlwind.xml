@@ -1,0 +1,34 @@
+<Spell>
+  <Info>
+    <Name>Whirlwind</Name>
+    <Class>Mage</Class>
+    <School>Evocation</School>
+    <Description>A gust of winds turns to a sudden windstorm forming a mini tornado.</Description>
+  </Info>
+
+  <Stats>
+    <Range>10</Range>
+    <Radius>2</Radius>
+    <Rank>1</Rank>
+    <Level>3</Level>
+    <AOE>DISK</AOE>
+    <ReqTarget>NO</ReqTarget>
+  </Stats>
+
+  <EffectName>WhirlwindEffect</EffectName>
+  <Icon>Resources/Spells/Whirlwind/whirlwind-icon.png</Icon>    
+  <Entity>
+    <Sprite>Resources/Spells/Blank/Blank.png</Sprite>
+    <Width>32</Width>
+    <Height>32</Height>
+    <Animfile>Resources/Spells/Blank/Blank.anim</Animfile>
+  </Entity>
+
+
+  <Blast>
+    <Sprite>Resources/Spells/Whirlwind/whirlwind2.png</Sprite>
+    <Width>128</Width>
+    <Height>128</Height>
+    <Animfile>Resources/Spells/Whirlwind/whirlwind.anim</Animfile>
+  </Blast>
+</Spell>

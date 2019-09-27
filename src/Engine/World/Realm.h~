@@ -1,0 +1,26 @@
+#include "map.h"
+#include "BasicCharacter.h"
+#include "Quest.h"
+
+#ifndef REALM_H
+#define REALM_H
+
+
+
+class Realm
+{
+private:
+	Map *the_map;
+	Quest *the_quest;
+	BaseCharacter *the_character;
+
+public:
+	Realm(Map *the_map,BaseCharacter *the_character, Quest *the_quest);
+	~Realm();
+	Quest *getQuest();
+	Map   *getMap();
+	BaseCharacter *getCharacter();
+	
+};
+
+#endif

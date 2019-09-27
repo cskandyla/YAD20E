@@ -59,7 +59,7 @@ void Caster::Draw(SDL_Texture *screen)
 	 else
 	   {
 	     BaseCharacter::Draw(screen);
-	     the_spell->Draw(screen);
+	     //the_spell->Draw(screen);
 	   }
        }
      else
@@ -79,9 +79,14 @@ bool Caster::Active()
 
 bool Caster::LearnSpell(Spell *the_spell)
 {
+	if(the_spell)
+	{
   Spells[the_spell->GetSpellInfo()->getName()]=the_spell;
   the_spell->SetCaster(this);      
   the_spell->GetSpellStats()->SetMastery(GetCasterStats()->GetMastery(school_string_to_enum(the_spell->GetSpellInfo()->getSchool())));
+  return true;
+	}
+	return false;
 }
 
 bool Caster::Prepare(string spellName)
@@ -99,10 +104,12 @@ bool Caster::Forget(string spellName)
     {
       if(Prepared.find(spellName)!=Prepared.end())
 	{
-	  Prepared.erase(Prepared.find(spellName));
+		Prepared.erase(Prepared.find(spellName));
+		return true;
 	}
     }
 
+    return false;
 }
 
 void Caster::HandleActiveSpells()

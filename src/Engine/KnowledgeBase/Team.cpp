@@ -11,6 +11,11 @@ Team::~Team()
   
 }
 
+const set<unsigned int> Team::GetMembers()
+{
+	return this->members;
+}
+
 string Team::GetName()
 {
   return this->name;

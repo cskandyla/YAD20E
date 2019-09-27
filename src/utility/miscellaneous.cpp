@@ -67,9 +67,10 @@ mkdir(dir.c_str());
 
 SDL_Rect  Translate(SDL_Rect rect)
 {
-  SDL_Rect translated_rect;
+    SDL_Rect translated_rect;
     translated_rect.x=rect.x-(rect.w-TILE_SIZE)/2;
-  translated_rect.y=rect.y-(rect.h-TILE_SIZE-TILE_SIZE/4);
+    translated_rect.y=rect.y-(rect.h-TILE_SIZE-TILE_SIZE/4);
+    return translated_rect;
 }
 
 

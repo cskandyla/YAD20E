@@ -1,0 +1,37 @@
+<Spell>
+  <Info>
+    <Name>Fireball</Name>
+    <Class>Mage</Class>
+    <School>Evocation</School>
+    <Description>An Explosion of Flame. Blasting all targets in the area for fire damage </Description>
+
+  </Info>
+
+  <Stats>
+    <Range>16</Range>
+    <Radius>3</Radius>
+    <Rank>1</Rank>
+    <Level>3</Level>
+    <AOE>DISK</AOE>
+    <ReqTarget>NO</ReqTarget>
+  </Stats>
+
+  <EffectName>FireballEffect</EffectName>
+  <Icon>Resources/Spells/Fireball/fireball-icon.png</Icon>    
+  <Entity>
+    <Sprite>Resources/Spells/Fireball/fireball.bmp</Sprite>
+    <Width>32</Width>
+    <Height>32</Height>
+    <Animfile>Resources/Spells/Fireball/fireball.anim</Animfile>
+  </Entity>
+
+
+  <Blast>
+    <Sprite>Resources/Spells/Fireball/fireball_explosion_large_2.png</Sprite>
+    <Width>192</Width>
+    <Height>192</Height>
+    <Animfile>Resources/Spells/Fireball/fireball_explosion_large_2.anim</Animfile>
+  </Blast>
+
+
+</Spell>

@@ -32,7 +32,8 @@ bool Warrior::DamageRoll(BaseCharacter *targetent)
     }
   targetent->getGeneralStats()->SetHp(targetent->getGeneralStats()->getHp()-dmgdone);
   cout<<"Warrior Doing "<<dmgdone<<" to "<<targetent->getInfo()->getName()<<" Hp remaining:"<<targetent->getGeneralStats()->getHp()<<endl; 
-  
+
+  return true;
 }
 
 bool Warrior::AttackRoll(BaseCharacter *targetent)

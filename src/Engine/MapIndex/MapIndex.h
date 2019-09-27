@@ -64,7 +64,7 @@ public:
     bool RemoveDoodad(unsigned int id);
     bool CharIndexUpdate(BaseCharacter *selected,int xpos,int ypos);
     bool ItemIndexUpdate(Item *item,int xpos,int ypos);
-    bool DoodadIndexUpdate(Doodad *doodad,int xpos,int ypos);
+	bool DoodadIndexUpdate(Doodad *doodad,int xpos,int ypos,int visibility);
 
     Doodad* getDoodad(unsigned int id);
     std::unordered_map<unsigned int,Doodad*>& getDoodads();

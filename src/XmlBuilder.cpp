@@ -4,7 +4,11 @@
 #include "KnowledgePool.h"
 #include "Seeker.h"
 #include "Zombie.h"
+#include "Idle.h"
 #include "Tokenizer.h"
+#include "LuaObjective.h"
+#include "BuiltinObjective.h"
+#include "Quests.h"
 #include <string>
 using namespace std;
 
@@ -156,7 +160,8 @@ Stats* XmlBuilder::LoadStats(string xmlfile)
 
 Projectile*       XmlBuilder::LoadProjectile(string xmlfile)
 {
-
+	cout<<"Not Implemented"<<endl;
+	return NULL;
 }
 
 BaseCharacter* XmlBuilder::LoadCharacter(string xmlfile)
@@ -767,12 +772,15 @@ void XmlBuilder::LoadSpells(string xmlfile,Mage *the_mage)
 
 Effect* LoadEffect(string xmlfile)
 {
-
+	cout<<" Not Implemented"<<endl;
+	return NULL;
 
 }
 
 void XmlBuilder::LoadTeams(string xmlfile)
 {
+
+  
   xml_document doc;
   xml_parse_result result = doc.load_file(xmlfile.c_str());
   pugi::xml_node teamsnode=doc.select_nodes("//Teams")[0].node();
@@ -787,8 +795,9 @@ void XmlBuilder::LoadTeams(string xmlfile)
 	  for(pugi::xml_node member=teamnode.child("Member");member;member=member.next_sibling("Member"))
 	    {
 	      BaseCharacter *bchar=LoadCharacter(member.child("character").child_value());
+	      cout<<"Character "<<bchar->getInfo()->getName()<<" loaded"<<endl;
 	      KnowledgePool::Instance()->AddCharacter(bchar);
-	    
+	      cout<<"Added "<<bchar->getInfo()->getName()<<endl;
 	      string AI=member.child("AI").child_value();
 	      if(AI!="NO")
 		{
@@ -804,6 +813,11 @@ void XmlBuilder::LoadTeams(string xmlfile)
 		      aie->setTarget(KnowledgePool::Instance()->getCharacter(1));
 		      KnowledgePool::Instance()->AddAIEntity(bchar->getID(),aie);
 		    }
+		  else if(AI=="Idle")
+		  {
+			  Idle_AI *aie=new Idle_AI(bchar);
+			  KnowledgePool::Instance()->AddAIEntity(bchar->getID(),aie);
+		  }
 		}
 	      string position=member.child("Location").child_value();
 	      cout<<"position"<<position<<endl;
@@ -816,10 +830,11 @@ void XmlBuilder::LoadTeams(string xmlfile)
 		  int xpos=atoi(tokens[0].c_str());
 		  int ypos=atoi(tokens[1].c_str());
 		  int tile_size=MapIndex::Instance()->getMap()->getTileSize();
+		  MapIndex::Instance()->AddCharacter(bchar);
 		  cout<<"Setting position to"<<xpos<<','<<ypos<<endl;
 		  bchar->SetPosition(xpos*tile_size,ypos*tile_size);
 		  cout<<"Adding character"<<endl;
-		  MapIndex::Instance()->AddCharacter(bchar);
+		  
 		  cout<<"Character Added"<<endl;
 		  members.insert(bchar->getID());
 		  MapIndex::Instance()->CharIndexUpdate(bchar,0,0);
@@ -854,7 +869,11 @@ cout<<"******BUILDING DOODAD FORM XML:"<<xmlfile<<"******"<<endl;
     }  
     
     }
-  
+
+  pugi::xml_node  visibilitynode=doc.select_nodes("//Visibility")[0].node();
+  int visibility=atoi(visibilitynode.child_value());
+  cout<<"Visibility:"<<visibility<<endl;
+  doodad->setVisibility(visibility);
   
   return doodad;
 }
@@ -877,11 +896,57 @@ void XmlBuilder::LoadDoodads(string xmlfile)
 	   int xpos=atoi(tokens[0].c_str());
 	   int ypos=atoi(tokens[1].c_str());
 	   int tile_size=MapIndex::Instance()->getMap()->getTileSize();
+	   
 	   doodad->GetEntity()->setPosition(xpos*tile_size,ypos*tile_size);	   
 	   MapIndex::Instance()->AddDoodad(doodad);
-	   MapIndex::Instance()->DoodadIndexUpdate(doodad,0,0);
+	   MapIndex::Instance()->DoodadIndexUpdate(doodad,0,0,doodad->getVisibility());
 
 	 }
     }
 
+}
+
+Quest* XmlBuilder::LoadQuest(string xmlfile, lua_State *l)
+{
+cout<<"******BUILDING QUEST FORM XML:"<<xmlfile<<"******"<<endl;
+  xml_document doc;
+  xml_parse_result result = doc.load_file(xmlfile.c_str());
+  pugi::xml_node  questnode=doc.select_nodes("//Quest")[0].node();
+  string questname=questnode.child("Name").child_value();
+
+  Quest *quest=new Quest(questname);
+  cout<<"Quest Name:"<<questname<<endl;
+  for(pugi::xml_node node=questnode.child("Objective");node;node=node.next_sibling("Objective"))
+  {
+	  string objective_name=node.child("Name").child_value();
+	  cout<<"Name:"<<objective_name<<endl;
+	  pugi::xml_node magic;
+	  Objective *objective=NULL;;
+	  if(magic=node.child("Script"))
+	  {
+		  
+		  string lua_func=magic.child_value();
+		  cout<<"Script:"<<lua_func<<endl;
+		  objective=new LuaObjective(objective_name,lua_func,l);
+	  }
+	  else if(magic=node.child("Builtin"))
+	  {
+		  string builtin=magic.child_value();
+		  int builtin_func=LookUpObjective(builtin.c_str());
+		  if(builtin_func!=-1)
+		  {
+			  objective=new BuiltinObjective(objective_name,BuiltinObjectives[builtin_func].objective_func);
+		  }
+		  else
+		  {
+			  cout<<"Could not find builtin"<<builtin<<endl;
+			  exit(-1);
+		  }
+		  
+		  
+	  }
+	  if(objective)
+		  quest->addObjective(objective);
+  }
+  return quest;
 }

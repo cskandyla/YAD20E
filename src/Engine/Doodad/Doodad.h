@@ -7,7 +7,6 @@ using std::unordered_map;
 
 //adjust accordingly
 //Overload to create doodads specific to your game or just provide doodadfuncs
-
 class Doodad;
 typedef void (*DoodadFunction)(Doodad *doodad);
 class Doodad
@@ -17,6 +16,7 @@ class Doodad
   AnimatedEntity *anim_entity;
   //HealthStats *health_stats;
   int cur_state;
+  int visibility;
   unordered_map<int,DoodadFunction> state_functions;
  public:
   Doodad(AnimatedEntity *anim_entity);
@@ -31,7 +31,8 @@ class Doodad
   AnimatedEntity* GetEntity();
   void SetID(unsigned int id);
   unsigned int GetID();
-
+  int getVisibility();
+	void setVisibility(int visibility);
 };
 #endif
 

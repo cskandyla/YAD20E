@@ -1,0 +1,12 @@
+
+
+#ifndef LOCATION__H
+#define LOCATION__H
+
+class Location
+{
+	
+};
+
+
+#endif

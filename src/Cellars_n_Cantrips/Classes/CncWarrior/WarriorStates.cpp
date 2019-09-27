@@ -7,7 +7,7 @@ WarriorReaction::WarriorReaction(CharacterHandler *s_handler):CharacterState(s_h
 {
 }
 
-
+//Counterattack
 void WarriorReaction::Execute()
 {
   if(the_char->GetBaseEntity()->getCur_Anim()->Done())

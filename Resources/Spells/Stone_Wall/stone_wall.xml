@@ -1,0 +1,33 @@
+<Spell>
+  <Info>
+    <Name>Stone Wall</Name>
+    <Class>Mage</Class>
+    <School>Conjuration</School>
+    <Description>A stone wall blocks movement</Description>
+  </Info>
+
+  <Stats>
+    <Range>10</Range>
+    <Radius>4</Radius>
+    <Rank>1</Rank>
+    <Level>2</Level>
+    <AOE>WALL</AOE>
+    <ReqTarget>NO</ReqTarget> 
+  </Stats>
+
+  <EffectName>StoneWallEffect</EffectName>
+  <OnBuilt>StoneWallBuiltEffect</OnBuilt>
+  <OnExpired>StoneWallExpiredEffect</OnExpired>
+
+  <Icon>Resources/Spells/Stone_Wall/wall0.png</Icon>    
+  
+  <Entity>
+    <Sprite>Resources/Spells/Stone_Wall/wall_extended.png</Sprite>
+    <Width>36</Width>
+    <Height>32</Height>
+    <Animfile>Resources/Spells/Stone_Wall/wall_extended.anim</Animfile>
+  </Entity>
+
+ 
+
+</Spell>

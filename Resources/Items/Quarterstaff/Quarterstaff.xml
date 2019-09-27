@@ -1,0 +1,35 @@
+<Item >
+
+<type>Weapon</type>
+
+<Info>
+<Name>Spear</Name>
+<Description>Just a simple Quarterstaff</Description>
+<Slot>MainWeapon</Slot>
+<Type>Weapon</Type>
+<Range>1</Range>
+<Damage>8</Damage>
+<ToHitBonus>0</ToHitBonus>
+<DamageBonus>0</DamageBonus>
+<BaseDamageType>Piercing</BaseDamageType>
+<WeaponType>Quarterstaff</WeaponType>
+</Info>
+
+<Stats>
+<Int>0</Int>
+<Dex>0</Dex>
+<Str>0</Str>
+<Con>0</Con>
+</Stats>
+
+
+<Image>Resources/Items/Quarterstaff/wand.bmp</Image>
+
+<Entity>
+<Sprite>Resources/Items/Quarterstaff/quarterstaff.png</Sprite>
+<Width>60</Width>
+<Height>60</Height>
+<Animfile>Resources/Items/Quarterstaff/quarterstaff.anim</Animfile>
+</Entity>
+
+</Item>

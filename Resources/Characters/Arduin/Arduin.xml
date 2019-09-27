@@ -1,0 +1,66 @@
+-<Character>
+
+<Info>
+  <Name>Arduin Flamewrath</Name>
+  <Class>Mage</Class>
+  <Race>Human</Race>
+  <Gender>Male</Gender>
+</Info>
+
+<Attributes>
+  <Int>18</Int>
+  <Dex>14</Dex>
+  <Str>10</Str>
+  <Con>14</Con>
+  <Spi>10</Spi>
+</Attributes>
+
+<GeneralStats>
+  <Hp>30</Hp>
+  <Sp>6</Sp>
+  <Xp>10000</Xp>
+</GeneralStats>
+
+<Entity>
+  <Sprite>Resources/Characters/Arduin/Base64.png</Sprite>
+  <Width>64</Width>
+  <Height>64</Height>
+  <Animfile>Resources/Characters/Arduin/Base64.anim</Animfile>
+</Entity>
+
+<Equiped>
+  <head>Resources/Items/Hood/hood.xml</head>
+  <chest>Resources/Items/Robes64/Robes64.xml</chest>
+  <legs></legs>
+  <neck></neck>
+  <hand1></hand1>
+  <hand2></hand2>
+  <mainHand>Resources/Items/Quarterstaff/Quarterstaff.xml</mainHand>
+  <SecondWeapon></SecondWeapon>
+  <ammo></ammo>
+</Equiped>
+<Items>
+  <Item>Resources/Items/Potion/Potion.xml</Item>
+</Items>
+
+<Portrait>Resources/UI/Portraits/Arduin.png</Portrait>
+
+<Feats>
+  <School>Evocation</School>
+  <Mastery>Arcane</Mastery>
+</Feats>
+
+
+<SpellBook>
+  <Spell>Resources/Spells/Fireball/Fireball.xml</Spell>
+  <Spell>Resources/Spells/Mage_Armor/mage_armor.xml</Spell>
+  <Spell>Resources/Spells/Arcane_Blast/Arcane_Blast.xml</Spell>
+  <Spell>Resources/Spells/Icecage/icecage.xml</Spell>
+  <Spell>Resources/Spells/Whirlwind/whirlwind.xml</Spell>
+  <Spell>Resources/Spells/FlashFire/flashfire.xml</Spell>
+  <Spell>Resources/Spells/iceshard/iceshard.xml</Spell>
+  <Spell>Resources/Spells/Stone_Wall/stone_wall.xml</Spell>
+  <Spell>Resources/Spells/Disintegration/disintegration.xml</Spell>
+</SpellBook>
+
+</Character>

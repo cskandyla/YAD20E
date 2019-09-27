@@ -1,0 +1,40 @@
+<?xml version="1.0"?>
+<Character>
+	<Info>
+		<Name>Birmwin64</Name>
+		<Class>Warrior</Class>
+		<Race>Human</Race>
+		<Gender>Male</Gender>
+	</Info>
+	<Attributes>
+		<Int>10</Int>
+		<Dex>16</Dex>
+		<Str>14</Str>
+		<Con>13</Con>
+		<Spi>10</Spi>
+	</Attributes>
+	<GeneralStats>
+		<Hp>29</Hp>
+		<Sp>6</Sp>
+		<Xp>8000</Xp>
+	</GeneralStats>
+	<Entity>
+		<Sprite>Resources/Characters/Birmwin64/base.png</Sprite>
+		<Width>64</Width>
+		<Height>64</Height>
+		<Animfile>Resources/Characters/Birmwin64/baseanim.anim</Animfile>
+	</Entity>
+	<Equiped>
+		<head>Resources/Items/ChainHead/ChainHead.xml</head>
+		<chest>Resources/Items/Chain64/chain.xml</chest>
+		<legs />
+		<neck />
+		<hand1 />
+		<hand2 />
+		<mainHand>Resources/Items/Dagger/dagger.xml</mainHand>
+		<SecondWeapon>Resources/Items/Shield/Shield.xml</SecondWeapon>
+		<ammo />
+	</Equiped>
+	<Items>
+	<Items />
+</Character>

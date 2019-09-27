@@ -51,6 +51,13 @@ class SpellState: public InputState
   void BuildAoeTiles();
 };
 
+class UseState : public InputState
+{
+public:
+	UseState(Turn *the_turn);
+	virtual void Execute(pair<int,int> pos);
+};
+
 class ItemState: public InputState
 {
  private:

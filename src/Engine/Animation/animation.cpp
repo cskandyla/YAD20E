@@ -149,6 +149,7 @@ SDL_Rect* Anim::getFrame(int framenum)
 {
   if(framenum<numframes)
     return &frames[framenum];
+  return NULL;
 }
 
 SDL_Rect* Anim::getCurFrame()

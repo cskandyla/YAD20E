@@ -109,10 +109,11 @@ bool SpellList::Prepare(Button *button,int level)
 	{
 	  if(caster->Prepare(button->GetName()))
 	    Prepared[level]->Add(button->GetName(),button->GetImage());
-	  
+	  return true;
 	}
 
     }
+  return false;
 }
 
 bool SpellList::Forget(Button *button,int level)
@@ -121,9 +122,10 @@ bool SpellList::Forget(Button *button,int level)
     {
       Prepared[level]->Remove(button);
       caster->Forget(button->GetName());
+      return true;
     }
 
-
+  return false;
 }
 
 //Clear

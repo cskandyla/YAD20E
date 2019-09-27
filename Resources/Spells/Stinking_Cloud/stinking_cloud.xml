@@ -1,0 +1,30 @@
+<Spell>
+  <Info>
+    <Name>Stinking Cloud</Name>
+    <Class>Mage</Class>
+    <School>Conjuration</School>
+    <Description>A Nauseating Cloud of air that causes inability to act</Description>
+  </Info>
+
+  <Stats>
+    <Range>10</Range>
+    <Radius>10</Radius>
+    <Rank>1</Rank>
+    <Level>2</Level>
+    <AOE>CLOUD</AOE>
+    <ReqTarget>NO</ReqTarget> 
+  </Stats>
+
+  <EffectName>StinkingCloudEffect</EffectName>
+  <Icon>Resources/Spells/Stinking_Cloud/stinking_cloud-icon.png</Icon>    
+  
+  <Entity>
+    <Sprite>Resources/Spells/Stinking_Cloud/stinking_cloud_2.png</Sprite>
+    <Width>384</Width>
+    <Height>384</Height>
+    <Animfile>Resources/Spells/Stinking_Cloud/stinking_cloud.anim</Animfile>
+  </Entity>
+
+ 
+
+</Spell>

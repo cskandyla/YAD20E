@@ -19,7 +19,9 @@ bool Cursor::SetMode(CURSOR_MODE cm)
   if(cursors.find(cm)!=cursors.end())
     {
       cursor_surf=cursors[cm];
+      return true;
     }
+  return false;
 }
 
 void Cursor::Draw(int x,int y,SDL_Surface *screen)

@@ -46,7 +46,7 @@ bool Turn::HasMoved()
 }
 bool Turn::StandardActionDone()
 {
-  return this->cur_char->ActionDone();
+ return this->cur_char->ActionDone();
 }
 bool Turn::TurnDone()
 {
@@ -138,6 +138,7 @@ Camera* Turn::GetCamera()
 
 UserInputHandler* Turn::GetUserInputHandler()
 {
+ 
   return this->user_handler;
 }
 

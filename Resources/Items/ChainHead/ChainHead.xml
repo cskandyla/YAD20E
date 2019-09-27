@@ -1,0 +1,33 @@
+<Item >
+
+<type>Visible</type>
+
+<Info>
+<Name>Chainmail Coif</Name>
+<Description>Just a simple coif of chainmail armor</Description>
+<Slot>Head</Slot>
+<Type>Armor</Type>
+<BaseDefense>6</BaseDefense>
+<Resistance>0</Resistance>
+<BonusDefense>0</BonusDefense>
+<ResistanceType>None</ResistanceType>
+</Info>
+
+<Stats>
+<Int>0</Int>
+<Dex>0</Dex>
+<Str>0</Str>
+<Con>0</Con>
+</Stats>
+
+
+<Image>Resources/Items/ChainHead/wand.bmp</Image>
+
+<Entity>
+<Sprite>Resources/Items/ChainHead/chainhead.png</Sprite>
+<Width>64</Width>
+<Height>64</Height>
+<Animfile>Resources/Items/ChainHead/chainhead.anim</Animfile>
+</Entity>
+
+</Item>

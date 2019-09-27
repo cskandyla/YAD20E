@@ -1,0 +1,7 @@
+
+class MesssageBuggle: public SimpleLabel
+{
+	
+	
+
+}

@@ -16,4 +16,8 @@ int LookUpDoodadFunction(const char *doodfunc_name);
 void DoorOpen(Doodad *doodad);
 void DoorClose(Doodad *doodad);
 
+void DoubleDoorOpen(Doodad *Doodad);
+void DoubleDoorClose(Doodad *Doodad);
+
+
 #endif

@@ -1,0 +1,19 @@
+<Spell>
+  <Info>
+    <Name>Arcane Blast</Name>
+    <Class>Wizard</Class>
+    <School>Evocation</School>
+    <Description>A Blast of arcane energy.</Description>    
+  </Info>
+
+  <Stats>
+    <Range>16</Range>
+    <Radius>0</Radius>
+    <Rank>1</Rank>
+    <Level>1</Level>
+    <AOE>SINGLE</AOE>
+  </Stats>
+
+
+
+</Spell>

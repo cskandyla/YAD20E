@@ -131,11 +131,14 @@ void UserInputHandler::LeftClick(SDL_Event *event)
     }
   else
     {
-	  i_state->Execute(camera->Translate(xpos,ypos));
-	  if(i_state->IsDone())
+	    if(i_state)
 	    {
-	      delete i_state;
-	      i_state=NULL;
+		    i_state->Execute(camera->Translate(xpos,ypos));
+		    if(i_state->IsDone())
+		    {
+			    delete i_state;
+			    i_state=NULL;
+		    }
 	    }
     }
   

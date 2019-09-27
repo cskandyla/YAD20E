@@ -1,0 +1,44 @@
+
+<mapsetting>
+  <intro>Resources/Docs/demo_intro</intro>
+  <outro>Resources/Docs/demo_outro</outro>
+  <visibility>18</visibility>
+  <SpawnPoint>18,18</SpawnPoint>
+  <Teams>
+    <Team>
+      <Name>Temple Guards</Name>
+      <Member>
+	<character>Resources/Characters/Birmwin64/birmwin64.xml</character>
+	<AI>Zombie</AI>
+	<Location>5,6</Location>
+      </Member>
+      <Member>
+	<character>Resources/Characters/Brimwin/Brimwin.xml</character>
+	<AI>Zombie</AI>
+	<Location>7,7</Location>
+      </Member>
+      <Member>
+	<character>Resources/Characters/Dagrat/Dagrat.xml</character>
+	<AI>Seeker</AI>
+	<Location>6,6</Location>
+      </Member>		
+    </Team>
+  </Teams>
+  <Doodads>
+    <Doodad>
+      <DoodadFile>Resources/Doodads/Door/Door.xml</DoodadFile>
+      <Location>13,11</Location>
+    </Doodad>
+    <Doodad>
+      <DoodadFile>Resources/Doodads/Door/Door.xml</DoodadFile>
+      <Location>14,25</Location>
+    </Doodad>
+  </Doodads>
+  
+  <Quests>
+    <Quest></Quest>
+  </Quests>
+  <Dialogs>
+    <Dialog></Dialog>
+  </Dialogs>
+</mapsetting>

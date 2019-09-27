@@ -1,0 +1,13 @@
+<Doodad> 
+  <Entity>
+    <Sprite>Resources/Doodads/Gate/gater.png</Sprite>
+    <Width>30</Width>
+    <Height>30</Height>
+    <Animfile>Resources/Doodads/Gate/gate.anim</Animfile>
+  </Entity>
+  <States>
+    <State>DoorOpen</State>
+    <State>DoorClose</State>
+  </States>
+    <Visibility>1</Visibility>
+</Doodad>
