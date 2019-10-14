@@ -1,8 +1,0 @@
-#ifndef __QUEST_FUNCS__
-#define __QUEST_FUNCS__
-
-
-void DemoKillGoblins();
-bool all_goblins_killed();
-bool always_succeed();
-#endif
